@@ -60,7 +60,6 @@ extern void vPortSVCHandler(void);
 extern void xPortSysTickHandler(void);
 extern void GPIOFIntHandler(void);
 extern void UARTStdioIntHandler(void);
-extern void USB0DeviceIntHandler(void);
 //*****************************************************************************
 //
 // The vector table.  Note that the proper constructs must be placed on this to
@@ -132,7 +131,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // Hibernate
-    USB0DeviceIntHandler,                   // USB0
+    IntDefaultHandler,                   // USB0
     IntDefaultHandler,                      // PWM Generator 3
     IntDefaultHandler,                      // uDMA Software Transfer
     IntDefaultHandler,                      // uDMA Error
