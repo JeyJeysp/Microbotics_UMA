@@ -73,47 +73,47 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION                1 // 1/0: Indica si FreeRTOS har√° uso de una planificaci√≥n expropiativa
-#define configUSE_IDLE_HOOK                 1 // 1/0: Indica si la tarea IDLE llamar√° a una funci√≥n de usuario al ejecutarse
-#define configUSE_TICK_HOOK                 0 // 1/0: Indica si se ejecutar√° una funci√≥n de usuario asociada al TICK del sistema
-#define configMAX_PRIORITIES                ( 16 )  // N√∫mero de prioridades para las tareas
+#define configUSE_PREEMPTION                1 // 1/0: Indica si FreeRTOS har· uso de una planificaciÛn expropiativa
+#define configUSE_IDLE_HOOK                 1 // 1/0: Indica si la tarea IDLE llamar· a una funciÛn de usuario al ejecutarse
+#define configUSE_TICK_HOOK                 0 // 1/0: Indica si se ejecutar· una funciÛn de usuario asociada al TICK del sistema
+#define configMAX_PRIORITIES                ( 16 )  // N˙mero de prioridades para las tareas
 #define configCPU_CLOCK_HZ                  ( ( unsigned long ) MAP_SysCtlClockGet() ) // Frecuencia de reloj del sistema (debe coincidir con SyCtlClockSet)
-#define configTICK_RATE_HZ                  ( ( portTickType ) 1000 ) // N√∫mero de TICKS por segundo --> precision del SO
-#define configMINIMAL_STACK_SIZE            ( ( unsigned short ) 128 )   // Tama√±o de la pila de la tarea IDLE en objetos (ARM:1objeto->32bits)
-#define configTOTAL_HEAP_SIZE               ( ( size_t ) ( 20 * 1024 ) ) // Memoria din√°mica reservada a FreeRTOS (en bytes)
-#define configMAX_TASK_NAME_LEN             ( 12 ) // Longitud m√°xima de los nombres dados a las tareas
-#define configUSE_TRACE_FACILITY            1 // 1/0: Activaci√≥n del modo traza
-#define configUSE_16_BIT_TICKS              0 // 1/0: Tama√±o de la variable de cuenta de ticks (1:16bits, 0:32bits)
+#define configTICK_RATE_HZ                  ( ( portTickType ) 1000 ) // N˙mero de TICKS por segundo --> precision del SO
+#define configMINIMAL_STACK_SIZE            ( ( unsigned short ) 128 )   // TamaÒo de la pila de la tarea IDLE en objetos (ARM:1objeto->32bits)
+#define configTOTAL_HEAP_SIZE               ( ( size_t ) ( 20 * 1024 ) ) // Memoria din·mica reservada a FreeRTOS (en bytes)
+#define configMAX_TASK_NAME_LEN             ( 12 ) // Longitud m·xima de los nombres dados a las tareas
+#define configUSE_TRACE_FACILITY            1 // 1/0: ActivaciÛn del modo traza
+#define configUSE_16_BIT_TICKS              0 // 1/0: TamaÒo de la variable de cuenta de ticks (1:16bits, 0:32bits)
 #define configIDLE_SHOULD_YIELD             1 // 1/0: Si 1, la tarea IDLE SIEMPRE cede el control a otra tarea, aunque tenga tambien prioridad 0
-#define configUSE_MUTEXES                   1 // 1/0: Indica si se van a usar MUTEX en la aplicaci√≥n
-#define configUSE_RECURSIVE_MUTEXES         1 // 1/0: Indica si se van a usar MUTEX recursivos en la aplicaci√≥n
-#define configUSE_COUNTING_SEMAPHORES       1 // 1/0: Indica si se van a usar semaforos contadores en la aplicaci√≥n
-#define configUSE_MALLOC_FAILED_HOOK	0 // 1/0: Indica si se ejecutar√° una funci√≥n de usuario en caso de fallo de memoria din√°mica
-#define configUSE_APPLICATION_TASK_TAG	0 // 1/0: Activa el modo TAG de las tareas (relacionado con la depuraci√≥n)
-#define configGENERATE_RUN_TIME_STATS	1 // 1/0: Activa la recogida de estad√≠sticas (relacionado con la depuraci√≥n)
-#define configUSE_TICKLESS_IDLE		0  // 1/0: Desactiva la ejecuci√≥n de la tarea IDLE si el sistema se suspende durante un tiempo
-									   // hasta que el sistema vuelva a reactivarse
+#define configUSE_MUTEXES                   1 // 1/0: Indica si se van a usar MUTEX en la aplicaciÛn
+#define configUSE_RECURSIVE_MUTEXES         1 // 1/0: Indica si se van a usar MUTEX recursivos en la aplicaciÛn
+#define configUSE_COUNTING_SEMAPHORES       1 // 1/0: Indica si se van a usar semaforos contadores en la aplicaciÛn
+#define configUSE_MALLOC_FAILED_HOOK    0 // 1/0: Indica si se ejecutar· una funciÛn de usuario en caso de fallo de memoria din·mica
+#define configUSE_APPLICATION_TASK_TAG  0 // 1/0: Activa el modo TAG de las tareas (relacionado con la depuraciÛn)
+#define configGENERATE_RUN_TIME_STATS   1 // 1/0: Activa la recogida de estadÌsticas (relacionado con la depuraciÛn)
+#define configUSE_TICKLESS_IDLE     0  // 1/0: Desactiva la ejecuciÛn de la tarea IDLE si el sistema se suspende durante un tiempo
+                                       // hasta que el sistema vuelva a reactivarse
 #define configCHECK_FOR_STACK_OVERFLOW      (2) // 0/1/2: Activa alguno de los mecanismos de chequeo de desbordamiento en pila de tareas
 
 #define configUSE_CO_ROUTINES               0 // 1/0: Activa el uso de mecanismos de corrutinas
-#define configMAX_CO_ROUTINE_PRIORITIES     ( 2 ) // Indica el n√∫mero de prioridades que podr√°n tener las tareas que funcionen como corrutinas
-#define configQUEUE_REGISTRY_SIZE           10 // Define el m√°ximo n√∫mero de colas y sem√°foros que se pueden registrar en el sistema
+#define configMAX_CO_ROUTINE_PRIORITIES     ( 2 ) // Indica el n˙mero de prioridades que podr·n tener las tareas que funcionen como corrutinas
+#define configQUEUE_REGISTRY_SIZE           10 // Define el m·ximo n˙mero de colas y sem·foros que se pueden registrar en el sistema
 
 /* Software timer definitions. */
-#define configUSE_TIMERS				1 // 1/0: Activa el uso de timers SW (basados en ticks)
-#define configTIMER_TASK_PRIORITY		( 2 ) // Fija la prioridad de la tareas interna que actualiza los timer SW
-#define configTIMER_QUEUE_LENGTH		32 // Tama√±o de la cola de comandos de control de Timers SW
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 ) // Tama√±o de la pila de la tarea interna que gestiona los timer SW
+#define configUSE_TIMERS                1 // 1/0: Activa el uso de timers SW (basados en ticks)
+#define configTIMER_TASK_PRIORITY       ( 2 ) // Fija la prioridad de la tareas interna que actualiza los timer SW
+#define configTIMER_QUEUE_LENGTH        32 // TamaÒo de la cola de comandos de control de Timers SW
+#define configTIMER_TASK_STACK_DEPTH    ( configMINIMAL_STACK_SIZE * 2 ) // TamaÒo de la pila de la tarea interna que gestiona los timer SW
 
 
-#define configUSE_STATS_FORMATTING_FUNCTIONS 1 // 1/0: Formateo de par√°metros estad√≠sticos recogidos en depuraci√≥n
+#define configUSE_STATS_FORMATTING_FUNCTIONS 1 // 1/0: Formateo de par·metros estadÌsticos recogidos en depuraciÛn
 
 //Esto es para las estadisticas
 #if configGENERATE_RUN_TIME_STATS
 #ifndef __ASM_HEADER__ /* elimina un monton de warnings */
 #include"utils/RunTimeStatsConfig.h"
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()            vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE()	GetOverflowCounts()
+#define portGET_RUN_TIME_COUNTER_VALUE()    GetOverflowCounts()
 #endif
 #endif
 
@@ -121,7 +121,7 @@
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_pcTaskGetTaskName 			1
+#define INCLUDE_pcTaskGetTaskName           1
 #define INCLUDE_vTaskPrioritySet            1
 #define INCLUDE_uxTaskPriorityGet           1
 #define INCLUDE_vTaskDelete                 1
@@ -136,7 +136,7 @@ to exclude the API function. */
 //Los flags de eventos. Ademas la utilizamos para lanzar codigo que se ejecute a nivel de tarea dese una ISR
 #define INCLUDE_xTimerPendFunctionCallFromISR          1
 //Esta de abajo por lo visto es necesaria para que funcionen los eventos ??
-#define INCLUDE_xTimerPendFunctionCall			1
+#define INCLUDE_xTimerPendFunctionCall          1
 
 
 /* Be ENORMOUSLY careful if you want to modify these two values and make sure

@@ -48,6 +48,7 @@ extern void _c_int00(void);
 //
 //*****************************************************************************
 extern uint32_t __STACK_TOP;
+extern uint32_t __stack;
 
 //*****************************************************************************
 //
@@ -57,8 +58,9 @@ extern uint32_t __STACK_TOP;
 extern void xPortPendSVHandler(void);
 extern void vPortSVCHandler(void);
 extern void xPortSysTickHandler(void);
-extern void UARTStdioIntHandler(void);
 extern void GPIOFIntHandler(void);
+extern void UARTStdioIntHandler(void);
+extern void USB0DeviceIntHandler(void);
 //*****************************************************************************
 //
 // The vector table.  Note that the proper constructs must be placed on this to
@@ -91,7 +93,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
     IntDefaultHandler,                      // GPIO Port E
-    UARTStdioIntHandler,                      // UART0 Rx and Tx
+    UARTStdioIntHandler,                    // UART0 Rx and Tx
     IntDefaultHandler,                      // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx
     IntDefaultHandler,                      // I2C0 Master and Slave
@@ -116,7 +118,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Analog Comparator 2
     IntDefaultHandler,                      // System Control (PLL, OSC, BO)
     IntDefaultHandler,                      // FLASH Control
-    GPIOFIntHandler,                        // GPIO Port F
+    GPIOFIntHandler,                      // GPIO Port F
     IntDefaultHandler,                      // GPIO Port G
     IntDefaultHandler,                      // GPIO Port H
     IntDefaultHandler,                      // UART2 Rx and Tx
@@ -130,7 +132,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     IntDefaultHandler,                      // Hibernate
-    IntDefaultHandler,                      // USB0
+    USB0DeviceIntHandler,                   // USB0
     IntDefaultHandler,                      // PWM Generator 3
     IntDefaultHandler,                      // uDMA Software Transfer
     IntDefaultHandler,                      // uDMA Error
@@ -240,10 +242,19 @@ void (* const g_pfnVectors[])(void) =
 void
 ResetISR(void)
 {
+	register uint32_t *j; //"register" para que no se le ocurra meterla en la pila...
     //
     // Jump to the CCS C initialization routine.  This will enable the
     // floating-point unit as well, so that does not need to be done here.
     //
+
+	//Inicializamos la pila del sistema (MSP) para que funcione OK el comando que muestra la
+	//tareas y su memoria (para que muestre adecuadamente la pila libre del kernel).
+	for (j=&__stack;j<&__STACK_TOP;j++)
+	{
+		*j=0xA5A5A5A5;
+	}
+
     __asm("    .global _c_int00\n"
           "    b.w     _c_int00");
 }

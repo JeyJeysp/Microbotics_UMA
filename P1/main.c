@@ -1,9 +1,9 @@
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <time.h>
 
-//  Librerias que se incluyen tipicamente para configuracion de perifericos y pinout
-#include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
 #include "inc/hw_ints.h"
 
 #include "driverlib/pwm.h"
@@ -17,56 +17,66 @@
 #include "driverlib/timer.h"
 #include "utils/uartstdio.h"
 #include "drivers/buttons.h"
+#include "drivers/rgb.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"
 #include "utils/cpu_usage.h"
+#include "commands.h"
+#include "timers.h"
 
 
-//  DBC: Globales
+//  Globales
 QueueHandle_t cola_freertos;
-uint32_t g_ui32CPUUsage;
+static uint32_t ui32Period, ui32DutyCycle[2];
+uint32_t g_ui32CPUUsage, g_ulSystemClock;
 //  Prioridad para la tarea maestra
 #define MASTERTASKPRIO 1
 //  Tamaño de pila para la tarea
 #define MASTERTASKSIZE 512
 
-//  TODO: Ciclos de reloj para conseguir una señal periódica de 50Hz (según reloj de periférico usado)
 /*
+    Ciclos de reloj para conseguir una señal periódica de 50Hz (según reloj de periférico usado)
+
     DBC:
 
     tiempo transcurrido = Numero de ciclos contados * Periodo = Numero de ciclos contados * (1 / frecuencia)
     t = N * T = N * (1 / f)
     Periodo de la onda PWM que hemos definido (el valor maximo posible es 65535)
     Como el reloj del micro funcionará a 40 MHz, tenemos que (1/50) / (1/(40*10e6)) = 800000, por lo tanto hay que dividirlo (mirar el main)
-    Lo dividimos entre 16 (ver main) y  lo multiplicamos por 0.02 para obtener los 50 hz
+    Lo dividimos entre 16 (por ser el divisor del PWM, ver función main()) y  lo multiplicamos por 0.02 (periodo de 1/50). Así obtenemos una señal
+    con un periodo de 50 Hz
 */
 #define PERIOD_PWM ((SysCtlClockGet() / 16) * 0.02)
-#define COUNT_1MS ((SysCtlClockGet() / 16) * 0.001) //   TODO: Ciclos para amplitud de pulso de 1ms (max velocidad en un sentido)
-#define STOPCOUNT ((SysCtlClockGet() / 16) * 0.00152) //   TODO: Ciclos para amplitud de pulso de parada (1.52ms)
-#define COUNT_2MS ((SysCtlClockGet() / 16) * 0.002) //   TODO: Ciclos para amplitud de pulso de 2ms (max velocidad en el otro sentido)
-#define NUM_STEPS 50 // Pasos para cambiar entre el pulso de 2ms al de 1ms
-#define CYCLE_ INCREMENTS (abs(COUNT_1MS-COUNT_2MS)) / NUM_STEPS // Variacion de amplitud tras pulsacion
+
+//  Ciclos para amplitud de pulso de 1ms (max velocidad en un sentido)
+//#define COUNT_1MS ((SysCtlClockGet() / 16) * 0.001)
+#define COUNT_1MS ((SysCtlClockGet() / 16) * 0.00142)
+//  Ciclos para amplitud de pulso de 2ms (max velocidad en el otro sentido)
+//#define COUNT_2MS ((SysCtlClockGet() / 16) * 0.002)
+#define COUNT_2MS ((SysCtlClockGet() / 16) * 0.00169)
+
+//  Ciclos para amplitud de pulso de parada a 1.54ms (para que esté parado el motor derecho)
+#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.00154)
+//  Ciclos para amplitud de pulso de parada a 1.55ms (para que esté parado el motor izquierdo)
+#define STOPCOUNT_IZQ ((SysCtlClockGet() / 16) * 0.00154)
+
+//  Pasos para cambiar entre el pulso de 2ms al de 1ms
+#define NUM_STEPS 50
+//  Variacion de amplitud tras pulsacion
+#define CYCLE_INCREMENTS (abs(COUNT_1MS-COUNT_2MS)) / NUM_STEPS
+
 
 #ifdef DEBUG
 void __error__(char *nombrefich, uint32_t linea)
 {
-    // Si la ejecucion esta aqui dentro, es que el RTOS o alguna de las bibliotecas de perifericos han
-    // comprobado que hay un error
-    // Mira el arbol de llamadas en el depurador y los valores de nombrefich y linea para encontrar posibles pistas.
     while(1)
     {
     }
 }
 #endif
 
-//*****************************************************************************
-//
-//  Aqui incluimos los "ganchos" a los diferentes eventos del FreeRTOS
-//
-//*****************************************************************************
-
-//  Esto es lo que se ejecuta cuando el sistema detecta un desbordamiento de pila
 void vApplicationStackOverflowHook(TaskHandle_t pxTask,  char *pcTaskName)
 {
     while(1)
@@ -74,51 +84,81 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask,  char *pcTaskName)
     }
 }
 
-//  Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
-void vApplicationTickHook( void )
-{
-    static uint8_t count = 0;
-
-    if (++count == 10)
-    {
-        g_ui32CPUUsage = CPUUsageTick();
-        count = 0;
-    }
-}
-
-//  Esto se ejecuta cada vez que entra a funcionar la tarea Idle
-void vApplicationIdleHook (void)
-{
-    SysCtlSleep();
-}
-
-
-//  Esto se ejecuta cada vez que entra a funcionar la tarea Idle
+//Esta es la funcion que ejecuta cuando el RTOS se queda sin memoria dinamica
 void vApplicationMallocFailedHook (void)
 {
     while(1);
 }
 
-//  TODO: Rutinas de interrupción de pulsadores
-//  TODO: Boton Izquierdo: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_1MS
-//  TODO: Boton Derecho: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_2MS
+//Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
+void vApplicationTickHook( void ){
+    static uint8_t ui8Count = 0;
+
+    if (++ui8Count == 10)
+    {
+        g_ui32CPUUsage = CPUUsageTick();
+        ui8Count = 0;
+    }
+}
+
+//Esto se ejecuta cada vez que entra a funcionar la tarea Idle
+void vApplicationIdleHook (void )
+{
+        SysCtlSleep();
+}
+
+//Esta tarea esta definida en el fichero command.c, es la que se encarga de procesar los comandos.
+//Aqui solo la declaramos para poderla crear en la funcion main.
+extern void vUARTTask( void *pvParameters );
+
+/*
+    TODO:
+
+    Rutinas de interrupción de pulsadores
+    Boton Izquierdo: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_1MS
+    Boton Derecho: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_2MS
+ */
 static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
 {
     uint32_t ui32Status;
 
     while(1)
     {
-        if (xQueueReceive(cola_freertos, &ui32Status, portMAX_DELAY) == pdTRUE)
+        if(xQueueReceive(cola_freertos, &ui32Status, portMAX_DELAY) == pdTRUE)
         {
-            if ((ui32Status & LEFT_BUTTON))
+            if((ui32Status & LEFT_BUTTON))// izquierda
             {
-                PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, COUNT_1MS);
-                PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, COUNT_1MS);
+                UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_1MS);
+                if(ui32DutyCycle[0] > COUNT_1MS)
+                {
+                    ui32DutyCycle[0] -= CYCLE_INCREMENTS;
+                    ui32DutyCycle[1] += CYCLE_INCREMENTS;
+                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+                    UARTprintf("Aumento el ciclo, marcha alante\r\n");
+                }
+                else
+                {
+                    UARTprintf("Tope del ciclo, marcha alante\r\n");
+                }
             }
-            else if ((ui32Status & RIGHT_BUTTON))
+
+            //  DBC: Cuando pulsamos el botón derecho
+            else if((ui32Status & RIGHT_BUTTON))
             {
-                PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, COUNT_2MS);
-                PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, COUNT_2MS);
+                UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_2MS);
+                if(ui32DutyCycle[0] < COUNT_2MS)
+                {
+                    ui32DutyCycle[0] += CYCLE_INCREMENTS;
+                    ui32DutyCycle[1] -= CYCLE_INCREMENTS;
+                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+                    UARTprintf("Aumento el ciclo, marcha atrás\r\n");
+                }
+                else
+                {
+                    UARTprintf("Tope del ciclo, marcha atrás\r\n");
+                }
             }
         }
     }
@@ -126,38 +166,53 @@ static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
 
 int main(void)
 {
-    uint32_t ui32Period, ui32DutyCycle;
-
     cola_freertos = xQueueCreate(16, sizeof(uint32_t));
     if(cola_freertos == NULL)
     {
         while(1);
     }
 
-    //  TODO: Elegir reloj adecuado para los valores de ciclos sean de tamaño soportable
-    //  Reloj del sistema a 40 MHz
+    /*
+         Elegir reloj adecuado para los valores de ciclos sean de tamaño soportable
+
+         DBC:
+
+         Vamos a elegir un reloj del sistema a 40 MHz
+     */
     SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+
+    // Get the system clock speed.
+    g_ulSystemClock = SysCtlClockGet();
+    // Habilita el clock gating de los perifericos durante el bajo consumo,
+    // perifericos que se desee activos en modo Sleep, deben habilitarse con SysCtlPeripheralSleepEnable
+    SysCtlPeripheralClockGating(true);
+    // Inicializa el subsistema de medida del uso de CPU (mide el tiempo que la CPU no esta dormida)
+    // Para eso utiliza un timer, que aqui hemos puesto que sea el TIMER5 (ultimo parametro que se pasa a la funcion)
+    // (y por tanto este no se deberia utilizar para otra cosa).
+    CPUUsageInit(g_ulSystemClock, configTICK_RATE_HZ/10, 5);
+
     /*
         DBC:
 
-        Dividir el periodo del PWM para ajustarse al máximo, tenemos que al dividirlo entre 16
-        es el mínimo valor que deja un valor exacto en el periodo y que se encuentra por debajo del límite
+        Dividir el periodo del PWM para ajustarse al máximo ( periodo onda PWM maximo de 65535)), tenemos que al dividirlo entre 16
+        ya que es el mínimo valor que deja un valor exacto en el periodo y que se encuentra por debajo del límite
     */
-
     SysCtlPWMClockSet(SYSCTL_PWMDIV_16);
 
-    //  TODO: Configura pulsadores placa TIVA (int. por flanco de bajada)
-    //  DBC: Inicializa los botones y habilita sus interrupciones
+    /*
+         Configura pulsadores placa TIVA (int. por flanco de bajada)
+
+         DBC:
+
+         Inicializa los botones y habilita sus interrupciones
+     */
     ButtonsInit();
+    //  DBC: Cconfiguración a flanco de bajada
     GPIOIntTypeSet(GPIO_PORTF_BASE, ALL_BUTTONS, GPIO_FALLING_EDGE);
     GPIOIntEnable(GPIO_PORTF_BASE, ALL_BUTTONS);
     IntEnable(INT_GPIOF);
-    //  DBC: Cambiamos la configuración a flanco de bajada
-    GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_0|GPIO_PIN_4, GPIO_FALLING_EDGE);
 
     /*
-        TODO:
-
         Configuracion ondas PWM: frecuencia 50Hz, anchura inicial= valor STOPCOUNT, 1540us
         para salida por PF2, y COUNT_1MS (o COUNT_2MS ) para salida por PF3(puedes ponerlo
         inicialmente a PERIOD_PWM/10)
@@ -175,11 +230,12 @@ int main(void)
     GPIOPinConfigure(GPIO_PF2_M1PWM6);
     GPIOPinConfigure(GPIO_PF3_M1PWM7);
 
-    //  DBC: PWM_GEN_3 Covers M1PWM6 and M1PWM7 See page 207 4/11/13 DriverLib doc
+    //  DBC: (página 207 DriverLib) PWM_GEN_3 cubre a M1PWM6 y M1PWM7
     PWMGenConfigure(PWM1_BASE, PWM_GEN_3, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
 
     ui32Period = PERIOD_PWM;
-    ui32DutyCycle = STOPCOUNT;
+    ui32DutyCycle[0] = STOPCOUNT_DER;
+    ui32DutyCycle[1] = STOPCOUNT_IZQ;
 
     // Carga la cuenta que establece la frecuencia de la señal PWM
     PWMGenPeriodSet(PWM1_BASE, PWM_GEN_3, ui32Period);
@@ -187,26 +243,19 @@ int main(void)
     PWMGenEnable(PWM1_BASE, PWM_GEN_3);
     // Habilita la salida de la señal
     PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT|PWM_OUT_7_BIT, true);
-    // Establece el periodo (en este caso, un porcentaje del valor máximo)
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle); // pf2
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle); //pf3
 
-    /*
-        TODO:
+    // DBC: Establece el periodo inicial. En este caso permanecerán quietas
+    // PF2, salida de PWM 6, motor derecho
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+    // PF3, salida de PWM 7, motor izquierdo
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
 
-        Opcion 1: Usar un Timer en modo PWM (ojo! Los timers PWM solo soportan cuentas
-        de 16 bits, a menos que uséis un prescaler/timer extension)
-        Opcion 2: Usar un módulo PWM(no dado en Sist. Empotrados pero mas sencillo)
-        Opcion 1: Usar un Wide Timer (32bits) en modo PWM (estos timers soportan
-        cuentas de 32 bits, pero tendréis que sacar las señales de control pwm por
-        otros pines distintos de PF2 y PF3)
-        Codigo principal, (poner en bucle infinito o bajo consumo)
+    if((xTaskCreate(TareaCambioPWM, "TaskPWM", MASTERTASKSIZE, NULL, tskIDLE_PRIORITY + MASTERTASKPRIO, NULL) != pdTRUE))
+    {
+        while(1);
+    }
 
-        Arranca el  scheduler.  Pasamos a ejecutar las tareas que se hayan activado.
-        el RTOS habilita las interrupciones al entrar aqui, asi que no hace falta habilitarlas
-        De la funcion vTaskStartScheduler no se sale nunca... a partir de aqui pasan a ejecutarse las tareas.
-    */
-    if((xTaskCreate(TareaCambioPWM, "TaskPWM", MASTERTASKSIZE, NULL, tskIDLE_PRIORITY + MASTERTASKPRIO, NULL) != pdPASS))
+    if(initCommandLine(512, tskIDLE_PRIORITY + 1) != pdTRUE)
     {
         while(1);
     }
