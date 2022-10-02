@@ -13,3 +13,7 @@ Práctica 1 | <ul><li>- [x] Ejercicio 1<li>- [x] Ejercicio 2<li>- [ ] Ejercicio 
 
 ## 👤 Contributors
 Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Electronic Systems Engineering at the University of Málaga.
+
+## ⭐ License
+
+[Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
