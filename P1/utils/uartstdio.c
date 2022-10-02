@@ -21,11 +21,11 @@
 //
 //*****************************************************************************
 //JMCG, EGP, NHR: Modificado para:
-// -> portada al CC3200...
 // -> Simplificar la rutina de interrupcion, eliminando codigo y pasandolo a funciones que se llaman desde tareas
 // -> Mejorar la integracion con FreeRTOS mediante colas de mensajes
 // -> Pasar parte del procesado a la funcion gets, que ademas se hace bloqueante. Esta funcion solo debe usarse en tareas
 // -> Incluir la opcion de historial (funcion gets)
+// -> Esta version incluye el uso de un  mutex para proteger los envios.
 
 
 
@@ -81,6 +81,8 @@ static QueueHandle_t xRxedChars;
 /* The queue used to hold characters waiting transmission. */
 static QueueHandle_t xCharsForTx;
 
+static SemaphoreHandle_t TxMutex; //Enables the use of UARTprintf and UARTWrite in more than one task
+
 
 #ifdef WANT_CMDLINE_HISTORY
 // Extended History support variables
@@ -134,7 +136,7 @@ static const uint32_t g_ui32UARTInt[3] =
 // The port number in use.
 //
 //*****************************************************************************
-static uint32_t g_ui32PortNum;
+static uint32_t g_ui32PortNum; //De momento parece que no se usa ¿Eliminar?
 
 
 //*****************************************************************************
@@ -216,9 +218,6 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
 			(ui32PortNum == 2));
 
 
-	//
-	// In buffered mode, we only allow a single instance to be opened.
-	//
 	ASSERT(g_ui32Base == 0);
 
 
@@ -263,8 +262,18 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
 	// Set the interrupt priority
 	MAP_IntPrioritySet(g_ui32UARTInt[ui32PortNum], configMAX_SYSCALL_INTERRUPT_PRIORITY);
 
+	//creates the message queues and the mutex
 	xRxedChars = xQueueCreate( UART_RX_BUFFER_SIZE, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( UART_TX_BUFFER_SIZE, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+
+	if ((xRxedChars==NULL)||(xCharsForTx==NULL))
+	    while (1); //Better use an assert!!
+
+#if configUSE_MUTEXES
+	TxMutex = xSemaphoreCreateMutex();
+	if (TxMutex==NULL)
+	    while (1); //Better use an assert!!
+#endif
 
 	//
 	// Flush both the buffers.
@@ -283,7 +292,7 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
 
 //*****************************************************************************
 //
-//! Writes a string of characters to the UART output.
+//! Writes a buffer of bytes to the UART output.
 //!
 //! \param pcBuf points to a buffer containing the string to transmit.
 //! \param ui32Len is the length of the string to transmit.
@@ -298,11 +307,6 @@ UARTStdioConfig(uint32_t ui32PortNum, uint32_t ui32Baud, uint32_t ui32SrcClock)
 //! a null character (0) is encountered, then no more characters will be
 //! transmitted and the function will return.
 //!
-//! In non-buffered mode, this function is blocking and will not return until
-//! all the characters have been written to the output FIFO.  In buffered mode,
-//! the characters are written to the UART transmit buffer and the call returns
-//! immediately.  If insufficient space remains in the transmit buffer,
-//! additional characters are discarded.
 //!
 //! \return Returns the count of characters written.
 //
@@ -317,6 +321,10 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
 	//
 	ASSERT(pcBuf != 0);
 	ASSERT(g_ui32Base != 0);
+
+#if configUSE_MUTEXES
+	xSemaphoreTake(TxMutex,portMAX_DELAY); //Use the mutex if available
+#endif
 
 	//
 	// Send the characters
@@ -341,6 +349,11 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
 		UARTPrimeTransmit(g_ui32Base);
 	}
 
+
+#if configUSE_MUTEXES
+    xSemaphoreGive(TxMutex); //Use the mutex if available
+#endif
+
 	//
 	// Return the number of characters written.
 	//
@@ -364,11 +377,6 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
 //! the string.  The string will be terminated with a 0 and the function will
 //! return.
 //!
-//! In both buffered and unbuffered modes, this function will block until
-//! a termination character is received.  If non-blocking operation is required
-//! in buffered mode, a call to UARTPeek() may be made to determine whether
-//! a termination character already exists in the receive buffer prior to
-//! calling UARTgets().
 //!
 //! Since the string will be null terminated, the user must ensure that the
 //! buffer is sized to allow for the additional null character.
@@ -741,10 +749,6 @@ UARTgets(char *pcBuf, uint32_t ui32Len)
 //! This function will receive a single character from the UART and store it at
 //! the supplied address.
 //!
-//! In both buffered and unbuffered modes, this function will block until a
-//! character is received.  If non-blocking operation is required in buffered
-//! mode, a call to UARTRxAvail() may be made to determine whether any
-//! characters are currently available for reading.
 //!
 //! \return Returns the character read.
 //
@@ -1257,10 +1261,6 @@ UARTprintf(const char *pcString, ...)
 //
 //! Returns the number of bytes available in the receive buffer.
 //!
-//! This function, available only when the module is built to operate in
-//! buffered mode using \b UART_BUFFERED, may be used to determine the number
-//! of bytes of data currently available in the receive buffer.
-//!
 //! \return Returns the number of available bytes.
 //
 //*****************************************************************************
@@ -1297,9 +1297,6 @@ UARTTxBytesFree(void)
 //
 //! Flushes the receive buffer.
 //!
-//! This function, available only when the module is built to operate in
-//! buffered mode using \b UART_BUFFERED, may be used to discard any data
-//! received from the UART but not yet read using UARTgets().
 //!
 //! \return None.
 //
@@ -1322,11 +1319,6 @@ UARTFlushRx(void)
 //! \param bDiscard indicates whether any remaining data in the buffer should
 //! be discarded (\b true) or transmitted (\b false).
 //!
-//! This function, available only when the module is built to operate in
-//! buffered mode using \b UART_BUFFERED, may be used to flush the transmit
-//! buffer, either discarding or transmitting any data received via calls to
-//! UARTprintf() that is waiting to be transmitted.  On return, the transmit
-//! buffer will be empty.
 //!
 //! \return None.
 //
@@ -1361,15 +1353,6 @@ void UARTFlushTx(bool bDiscard)
 //! \param bEnable must be set to \b true to enable echo or \b false to
 //! disable it.
 //!
-//! This function, available only when the module is built to operate in
-//! buffered mode using \b UART_BUFFERED, may be used to control whether or not
-//! received characters are automatically echoed back to the transmitter.  By
-//! default, echo is enabled and this is typically the desired behavior if
-//! the module is being used to support a serial command line.  In applications
-//! where this module is being used to provide a convenient, buffered serial
-//! interface over which application-specific binary protocols are being run,
-//! however, echo may be undesirable and this function can be used to disable
-//! it.
 //!
 //! \return None.
 //
