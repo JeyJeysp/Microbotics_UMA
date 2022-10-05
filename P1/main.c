@@ -98,6 +98,7 @@ static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
         if(xQueueReceive(cola_freertos, &ui32Status, portMAX_DELAY) == pdTRUE)
         {
             mov_rectilineo_servos(ui32Status);
+
         }
     }
 }

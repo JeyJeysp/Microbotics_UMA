@@ -132,11 +132,11 @@ static Cmd_parar_pausar_motor(int argc, char *argv[])
         return 0;
     }
 
-    if(0 == strncmp(argv[0], "q", 1))
+    if(0 == strncmp(argv[0], "p", 1))
     {
         parar_pausar_motor(1);
     }
-    else if(0 == strncmp(argv[0], "p", 1))
+    else if(0 == strncmp(argv[0], "pausa", 1))
     {
         parar_pausar_motor(2);
     }
@@ -144,15 +144,7 @@ static Cmd_parar_pausar_motor(int argc, char *argv[])
     return 0;
 }
 
-static Cmd_pausar_motor(int argc, char *argv[])
-{
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, STOPCOUNT_DER);
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, STOPCOUNT_IZQ);
-
-    return 0;
-}
-
-static Cmd_acelerar_motor(int argc, char *argv[])
+/*static Cmd_acelerar_motor(int argc, char *argv[])
 {
 	if(argc < 1)
 	{
@@ -170,6 +162,34 @@ static Cmd_acelerar_motor(int argc, char *argv[])
 	}
     
     return 0;
+}*/
+
+static Cmd_movimiento_rueda(int argc, char *argv[])
+{
+    if(argc < 1)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    if(0 == strncmp(argv[0], "q", 1))
+    {
+        mov_una_rueda(2);
+    }
+    else if(0 == strncmp(argv[0], "w", 1))
+    {
+        mov_una_rueda(1);
+    }
+    else if(0 == strncmp(argv[0], "a", 1))
+    {
+        mov_una_rueda(4);
+    }
+    else if(0 == strncmp(argv[0], "s", 1))
+    {
+        mov_una_rueda(3);
+    }
+
+    return 0;
 }
 
 static Cmd_movimientocurvo_motor(int argc, char *argv[])
@@ -180,7 +200,7 @@ static Cmd_movimientocurvo_motor(int argc, char *argv[])
 		return 0;
 	}
 
-    if(0 == strncmp(argv[0], "a", 1))
+    if(0 == strncmp(argv[0], "i", 1))
 	{
 		mov_curvo_servos(1);
 	}
@@ -222,14 +242,18 @@ tCmdLineEntry g_psCmdTable[] =
     { "?", Cmd_help, "\t\t: Lista de comandos" },
     { "cpu", Cmd_cpu, "\t\t: Muestra el uso de  CPU " },
     { "free", Cmd_free, "\t\t: Muestra la memoria libre" },
-    { "q", Cmd_parar_pausar_motor, "\t\t: Parar motor (RESET del duty cycle)" },
-    { "p", Cmd_parar_pausar_motor, "\t\t: Pausar motor (PAUSA del duty cycle)" },
-	{ "w", Cmd_acelerar_motor, "\t\t: Activa swith izquierdo, marcha alante"},
-	{ "s", Cmd_acelerar_motor, "\t\t: Activa swith derecho, marcha atrás"},
+    { "p", Cmd_parar_pausar_motor, "\t\t: Parar motor (RESET del duty cycle)" },
+    { "pausa", Cmd_parar_pausar_motor, "\t\t: Pausar motor (PAUSA del duty cycle)" },
+	//{ "w", Cmd_acelerar_motor, "\t\t: Activa switch izquierdo, marcha alante"},
+	//{ "s", Cmd_acelerar_motor, "\t\t: Activa switch derecho, marcha atrás"},
 	{ "d", Cmd_movimientocurvo_motor, " \t\t: Giro a la derecha"},
-	{ "a", Cmd_movimientocurvo_motor, " \t\t: Giro a la izquierda"},
+	{ "i", Cmd_movimientocurvo_motor, " \t\t: Giro a la izquierda"},
 	{ "e", Cmd_movimientorotatorio_motor, " \t\t: Giro rotatorio a la izquierda"},
 	{ "r", Cmd_movimientorotatorio_motor, " \t\t: Giro rotatorio a la derecha"},
+    { "q", Cmd_movimiento_rueda, " \t\t: Hacia delante, rueda izquierda"},
+    { "w", Cmd_movimiento_rueda, " \t\t: Hacia delante, rueda derecha"},
+    { "a", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda izquierda"},
+    { "s", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda derecha"},
 #if ( configUSE_TRACE_FACILITY == 1 )
 	{ "tasks", Cmd_tasks, "\t\t: Muestra informacion de las tareas" },
 #endif
