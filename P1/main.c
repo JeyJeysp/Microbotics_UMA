@@ -26,72 +26,50 @@
 #include "commands.h"
 #include "timers.h"
 
+#include "drivers/Servos.h"
 
-//  Globales
-QueueHandle_t cola_freertos;
-static uint32_t ui32Period, ui32DutyCycle[2];
-uint32_t g_ui32CPUUsage, g_ulSystemClock;
-//  Prioridad para la tarea maestra
-#define MASTERTASKPRIO 1
-//  Tamaño de pila para la tarea
-#define MASTERTASKSIZE 512
 
 /*
-    Ciclos de reloj para conseguir una señal periódica de 50Hz (según reloj de periférico usado)
-
     DBC:
 
-    tiempo transcurrido = Numero de ciclos contados * Periodo = Numero de ciclos contados * (1 / frecuencia)
-    t = N * T = N * (1 / f)
-    Periodo de la onda PWM que hemos definido (el valor maximo posible es 65535)
-    Como el reloj del micro funcionará a 40 MHz, tenemos que (1/50) / (1/(40*10e6)) = 800000, por lo tanto hay que dividirlo (mirar el main)
-    Lo dividimos entre 16 (por ser el divisor del PWM, ver función main()) y  lo multiplicamos por 0.02 (periodo de 1/50). Así obtenemos una señal
-    con un periodo de 50 Hz
+    Declaracion de globales
 */
-#define PERIOD_PWM ((SysCtlClockGet() / 16) * 0.02)
+QueueHandle_t cola_freertos;
+uint32_t g_ui32CPUUsage, g_ulSystemClock;
 
-//  Ciclos para amplitud de pulso de 1ms (max velocidad en un sentido)
-//#define COUNT_1MS ((SysCtlClockGet() / 16) * 0.001)
-#define COUNT_1MS ((SysCtlClockGet() / 16) * 0.00142)
-//  Ciclos para amplitud de pulso de 2ms (max velocidad en el otro sentido)
-//#define COUNT_2MS ((SysCtlClockGet() / 16) * 0.002)
-#define COUNT_2MS ((SysCtlClockGet() / 16) * 0.00169)
+/*
+    DBC:
 
-//  Ciclos para amplitud de pulso de parada a 1.54ms (para que esté parado el motor derecho)
-#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.00154)
-//  Ciclos para amplitud de pulso de parada a 1.55ms (para que esté parado el motor izquierdo)
-#define STOPCOUNT_IZQ ((SysCtlClockGet() / 16) * 0.00154)
+    Definicion de la prioridad para la tarea y el tamano de pila
+*/ 
+#define MASTERTASKPRIO 1
+#define MASTERTASKSIZE 512
 
-//  Pasos para cambiar entre el pulso de 2ms al de 1ms
-#define NUM_STEPS 50
-//  Variacion de amplitud tras pulsacion
-#define CYCLE_INCREMENTS (abs(COUNT_1MS-COUNT_2MS)) / NUM_STEPS
 
 
 #ifdef DEBUG
-void __error__(char *nombrefich, uint32_t linea)
-{
-    while(1)
+
+    void __error__(char *nombrefich, uint32_t linea)
     {
+        while(1);
     }
-}
+
 #endif
 
 void vApplicationStackOverflowHook(TaskHandle_t pxTask,  char *pcTaskName)
 {
-    while(1)
-    {
-    }
+    while(1);
 }
 
-//Esta es la funcion que ejecuta cuando el RTOS se queda sin memoria dinamica
+//  Esta es la funcion que ejecuta cuando el RTOS se queda sin memoria dinamica
 void vApplicationMallocFailedHook (void)
 {
     while(1);
 }
 
-//Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
-void vApplicationTickHook( void ){
+//  Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
+void vApplicationTickHook( void )
+{
     static uint8_t ui8Count = 0;
 
     if (++ui8Count == 10)
@@ -101,23 +79,16 @@ void vApplicationTickHook( void ){
     }
 }
 
-//Esto se ejecuta cada vez que entra a funcionar la tarea Idle
+//  Esto se ejecuta cada vez que entra a funcionar la tarea Idle
 void vApplicationIdleHook (void )
 {
-        SysCtlSleep();
+    SysCtlSleep();
 }
 
-//Esta tarea esta definida en el fichero command.c, es la que se encarga de procesar los comandos.
-//Aqui solo la declaramos para poderla crear en la funcion main.
-extern void vUARTTask( void *pvParameters );
+//  Esta tarea esta definida en el fichero command.c, es la que se encarga de procesar los comandos.
+//  Aqui solo la declaramos para poderla crear en la funcion main.
+extern void vUARTTask(void *pvParameters);
 
-/*
-    TODO:
-
-    Rutinas de interrupción de pulsadores
-    Boton Izquierdo: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_1MS
-    Boton Derecho: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_2MS
- */
 static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
 {
     uint32_t ui32Status;
@@ -126,40 +97,7 @@ static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
     {
         if(xQueueReceive(cola_freertos, &ui32Status, portMAX_DELAY) == pdTRUE)
         {
-            if((ui32Status & LEFT_BUTTON))// izquierda
-            {
-                UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_1MS);
-                if(ui32DutyCycle[0] > COUNT_1MS)
-                {
-                    ui32DutyCycle[0] -= CYCLE_INCREMENTS;
-                    ui32DutyCycle[1] += CYCLE_INCREMENTS;
-                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
-                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
-                    UARTprintf("Aumento el ciclo, marcha alante\r\n");
-                }
-                else
-                {
-                    UARTprintf("Tope del ciclo, marcha alante\r\n");
-                }
-            }
-
-            //  DBC: Cuando pulsamos el botón derecho
-            else if((ui32Status & RIGHT_BUTTON))
-            {
-                UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_2MS);
-                if(ui32DutyCycle[0] < COUNT_2MS)
-                {
-                    ui32DutyCycle[0] += CYCLE_INCREMENTS;
-                    ui32DutyCycle[1] -= CYCLE_INCREMENTS;
-                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
-                    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
-                    UARTprintf("Aumento el ciclo, marcha atrás\r\n");
-                }
-                else
-                {
-                    UARTprintf("Tope del ciclo, marcha atrás\r\n");
-                }
-            }
+            mov_rectilineo_servos(ui32Status);
         }
     }
 }
@@ -173,11 +111,11 @@ int main(void)
     }
 
     /*
-         Elegir reloj adecuado para los valores de ciclos sean de tamaño soportable
+        Elegir reloj adecuado para los valores de ciclos sean de tamano soportable
 
-         DBC:
+        DBC:
 
-         Vamos a elegir un reloj del sistema a 40 MHz
+        Vamos a elegir un reloj del sistema a 40 MHz
      */
     SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
 
@@ -191,69 +129,15 @@ int main(void)
     // (y por tanto este no se deberia utilizar para otra cosa).
     CPUUsageInit(g_ulSystemClock, configTICK_RATE_HZ/10, 5);
 
-    /*
-        DBC:
+    // DBC: Llamamos a la funcion de inicializacion de los Servos
+    servos_init();
 
-        Dividir el periodo del PWM para ajustarse al máximo ( periodo onda PWM maximo de 65535)), tenemos que al dividirlo entre 16
-        ya que es el mínimo valor que deja un valor exacto en el periodo y que se encuentra por debajo del límite
-    */
-    SysCtlPWMClockSet(SYSCTL_PWMDIV_16);
-
-    /*
-         Configura pulsadores placa TIVA (int. por flanco de bajada)
-
-         DBC:
-
-         Inicializa los botones y habilita sus interrupciones
-     */
-    ButtonsInit();
-    //  DBC: Cconfiguración a flanco de bajada
-    GPIOIntTypeSet(GPIO_PORTF_BASE, ALL_BUTTONS, GPIO_FALLING_EDGE);
-    GPIOIntEnable(GPIO_PORTF_BASE, ALL_BUTTONS);
-    IntEnable(INT_GPIOF);
-
-    /*
-        Configuracion ondas PWM: frecuencia 50Hz, anchura inicial= valor STOPCOUNT, 1540us
-        para salida por PF2, y COUNT_1MS (o COUNT_2MS ) para salida por PF3(puedes ponerlo
-        inicialmente a PERIOD_PWM/10)
-
-        DBC:
-
-        Tenemos que PF2 emplea el módulo PWM M1, con PWM6 Y PF3 M1 con PWM7
-    */
-    //  DBC: Habilitamos el módulo M1 del PWM
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
-    //  DBC: Habilitamos el bajo consumo del periférico
-    SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_PWM1);
-    //  DBC: Configuramos los pines como salida PWM
-    GPIOPinTypePWM(GPIO_PORTF_BASE, GPIO_PIN_2|GPIO_PIN_3);
-    GPIOPinConfigure(GPIO_PF2_M1PWM6);
-    GPIOPinConfigure(GPIO_PF3_M1PWM7);
-
-    //  DBC: (página 207 DriverLib) PWM_GEN_3 cubre a M1PWM6 y M1PWM7
-    PWMGenConfigure(PWM1_BASE, PWM_GEN_3, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
-
-    ui32Period = PERIOD_PWM;
-    ui32DutyCycle[0] = STOPCOUNT_DER;
-    ui32DutyCycle[1] = STOPCOUNT_IZQ;
-
-    // Carga la cuenta que establece la frecuencia de la señal PWM
-    PWMGenPeriodSet(PWM1_BASE, PWM_GEN_3, ui32Period);
-    //Habilita/pone en marcha el generador PWM
-    PWMGenEnable(PWM1_BASE, PWM_GEN_3);
-    // Habilita la salida de la señal
-    PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT|PWM_OUT_7_BIT, true);
-
-    // DBC: Establece el periodo inicial. En este caso permanecerán quietas
-    // PF2, salida de PWM 6, motor derecho
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
-    // PF3, salida de PWM 7, motor izquierdo
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
 
     if((xTaskCreate(TareaCambioPWM, "TaskPWM", MASTERTASKSIZE, NULL, tskIDLE_PRIORITY + MASTERTASKPRIO, NULL) != pdTRUE))
     {
         while(1);
     }
+
 
     if(initCommandLine(512, tskIDLE_PRIORITY + 1) != pdTRUE)
     {
@@ -265,9 +149,12 @@ int main(void)
     while(1);
 }
 
-//  DBC: Función para el tratamiento de los switches
+
+//  DBC: Funcion para el tratamiento de los switches
 void GPIOFIntHandler(void)
 {
+    uint32_t valor;
+
     //  DBC: Hay que inicializarlo a False!!
     BaseType_t higherPriorityTaskWoken = pdFALSE;
 
@@ -275,9 +162,19 @@ void GPIOFIntHandler(void)
     //  DBC: pasamos el estado de los pines cuando se produjo la interrupcion
     int32_t i32PinStatus = MAP_GPIOIntStatus(GPIO_PORTF_BASE, ALL_BUTTONS);
 
-    //  DBC: FromISR porque estoy en un rutina de tratamiento de interrupción
+    //  DBC: FromISR porque estoy en un rutina de tratamiento de interrupcion
     //  DBC: Pasamos un valor por referencia, escribe en la cola freeRTOS
-    xQueueSendFromISR(cola_freertos, &i32PinStatus, &higherPriorityTaskWoken);
+    if((i32PinStatus & LEFT_BUTTON))
+    {
+        valor = 1;
+        xQueueSendFromISR(cola_freertos, &valor, &higherPriorityTaskWoken);
+    }
+    else if((i32PinStatus & RIGHT_BUTTON))
+    {
+        valor = 2;
+        xQueueSendFromISR(cola_freertos, &valor, &higherPriorityTaskWoken);
+    }
+    
     MAP_GPIOIntClear(GPIO_PORTF_BASE, ALL_BUTTONS);
 
     //  DBC: Ahora hay que comprobar si hay que hacer el cambio de contexto
