@@ -103,7 +103,7 @@ void servos_init(void)
     Boton Izquierdo: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_1MS
     Boton Derecho: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_2MS
 */
-void mov_rectilineo_servos(uint32_t ui32Status)
+void mov_rectilineo_servos(uint32_t ui32Status)     //NOTA: dejamos esta funcion para usar los botones.
 {
     if (estado == 1)
     {
@@ -226,4 +226,70 @@ void parar_pausar_motor(uint32_t ui32Status)
 
     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, STOPCOUNT_DER);
     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, STOPCOUNT_IZQ);
+}
+
+
+
+void mov_una_rueda(uint32_t ui32Status)
+{
+    if (estado == 1)
+    {
+        ui32DutyCycle[0] = DCanterior[0];
+        ui32DutyCycle[1] = DCanterior[1];
+
+        estado = 0;
+    }
+
+    if(ui32Status == 1)      //RUEDA DERECHA - HACIA DELANTE
+    {
+        if(ui32DutyCycle[0] > COUNT_1MS)
+        {
+            ui32DutyCycle[0] -= CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia delante\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda D marcha hacia delante\r\n");
+        }
+    }
+    else if(ui32Status == 2)       //RUEDA IZQUIERDA - HACIA DELANTE
+    {
+        if(ui32DutyCycle[0] > COUNT_1MS)
+        {
+            ui32DutyCycle[1] += CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia delante\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda I marcha hacia delante\r\n");
+        }
+    }
+    else if(ui32Status == 3)       //RUEDA DERECHA - HACIA ATRAS
+    {
+        if(ui32DutyCycle[0] < COUNT_2MS)
+        {
+            ui32DutyCycle[0] += CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia atras\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda D marcha hacia atras\r\n");
+        }
+    }
+    else if(ui32Status == 4)       //RUEDA IZQUIERDA - HACIA ATRAS
+    {
+        if(ui32DutyCycle[0] < COUNT_2MS)
+        {
+            ui32DutyCycle[1] -= CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia atras\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda I marcha hacia atras\r\n");
+        }
+    }
 }

@@ -53,3 +53,4 @@ void mov_rectilineo_servos(uint32_t ui32Status);
 void mov_curvo_servos(uint32_t ui32Status);
 void mov_rotatorio_servos(uint32_t ui32Status);
 void parar_pausar_motor(uint32_t ui32Status);
+void mov_una_rueda(uint32_t ui32Status);
