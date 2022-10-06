@@ -9,7 +9,7 @@ Repository for tracking and version control of the projects to be done for the M
 
 Práctica|Contenido
 ---|---
-Práctica 1 | <ul><li>- [x] Ejercicio 1<li>- [x] Ejercicio 2<li>- [x] Ejercicio 3<li> [x] Ejercicio 4<li> [x] Ejercicio 5<li> [ ] Ejercicio 6</ul>
+Práctica 1 | <ul><li>- Todos los ejercicios propuestos completados</ul>
 
 ## 👤 Contributors
 Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Electronic Systems Engineering at the University of Málaga.

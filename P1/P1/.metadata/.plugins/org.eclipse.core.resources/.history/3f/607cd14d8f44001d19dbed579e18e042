@@ -1,0 +1,179 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "inc/hw_ints.h"
+
+#include "driverlib/pwm.h"
+#include "driverlib/gpio.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/rom.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/uart.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/adc.h"
+#include "driverlib/timer.h"
+#include "utils/uartstdio.h"
+#include "drivers/buttons.h"
+#include "drivers/rgb.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include "utils/cpu_usage.h"
+#include "commands.h"
+#include "timers.h"
+
+#include "drivers/Servos.h"
+
+
+/*
+    DBC:
+
+    Declaracion de globales
+*/
+QueueHandle_t cola_freertos;
+uint32_t g_ui32CPUUsage, g_ulSystemClock;
+
+/*
+    DBC:
+
+    Definicion de la prioridad para la tarea y el tamano de pila
+*/ 
+#define MASTERTASKPRIO 1
+#define MASTERTASKSIZE 512
+
+
+
+#ifdef DEBUG
+
+    void __error__(char *nombrefich, uint32_t linea)
+    {
+        while(1);
+    }
+
+#endif
+
+void vApplicationStackOverflowHook(TaskHandle_t pxTask,  char *pcTaskName)
+{
+    while(1);
+}
+
+//  Esta es la funcion que ejecuta cuando el RTOS se queda sin memoria dinamica
+void vApplicationMallocFailedHook (void)
+{
+    while(1);
+}
+
+//  Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
+void vApplicationTickHook( void )
+{
+    static uint8_t ui8Count = 0;
+
+    if (++ui8Count == 10)
+    {
+        g_ui32CPUUsage = CPUUsageTick();
+        ui8Count = 0;
+    }
+}
+
+//  Esto se ejecuta cada vez que entra a funcionar la tarea Idle
+void vApplicationIdleHook (void )
+{
+    SysCtlSleep();
+}
+
+//  Esta tarea esta definida en el fichero command.c, es la que se encarga de procesar los comandos.
+//  Aqui solo la declaramos para poderla crear en la funcion main.
+extern void vUARTTask(void *pvParameters);
+
+static portTASK_FUNCTION(TareaCambioPWM, pvParameters)
+{
+    uint32_t ui32Status;
+
+    while(1)
+    {
+        if(xQueueReceive(cola_freertos, &ui32Status, portMAX_DELAY) == pdTRUE)
+        {
+            mov_rectilineo_servos(ui32Status);
+        }
+    }
+}
+
+int main(void)
+{
+    cola_freertos = xQueueCreate(16, sizeof(uint32_t));
+    if(cola_freertos == NULL)
+    {
+        while(1);
+    }
+
+    /*
+        Elegir reloj adecuado para los valores de ciclos sean de tamano soportable
+
+        DBC:
+
+        Vamos a elegir un reloj del sistema a 40 MHz
+     */
+    SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+
+    // Get the system clock speed.
+    g_ulSystemClock = SysCtlClockGet();
+    // Habilita el clock gating de los perifericos durante el bajo consumo,
+    // perifericos que se desee activos en modo Sleep, deben habilitarse con SysCtlPeripheralSleepEnable
+    SysCtlPeripheralClockGating(true);
+    // Inicializa el subsistema de medida del uso de CPU (mide el tiempo que la CPU no esta dormida)
+    // Para eso utiliza un timer, que aqui hemos puesto que sea el TIMER5 (ultimo parametro que se pasa a la funcion)
+    // (y por tanto este no se deberia utilizar para otra cosa).
+    CPUUsageInit(g_ulSystemClock, configTICK_RATE_HZ/10, 5);
+
+    // DBC: Llamamos a la funcion de configuracion de los Servos
+    configurar_servos();
+
+
+    if((xTaskCreate(TareaCambioPWM, "TaskPWM", MASTERTASKSIZE, NULL, tskIDLE_PRIORITY + MASTERTASKPRIO, NULL) != pdTRUE))
+    {
+        while(1);
+    }
+
+
+    if(initCommandLine(512, tskIDLE_PRIORITY + 1) != pdTRUE)
+    {
+        while(1);
+    }
+
+    vTaskStartScheduler();
+
+    while(1);
+}
+
+
+//  DBC: Funcion para el tratamiento de los switches
+void GPIOFIntHandler(void)
+{
+    //  DBC: Hay que inicializarlo a False!!
+    BaseType_t higherPriorityTaskWoken = pdFALSE;
+
+    //  DBC: Lee el estado del puerto (activos a nivel bajo)
+    //  DBC: pasamos el estado de los pines cuando se produjo la interrupcion
+    int32_t i32PinStatus = MAP_GPIOIntStatus(GPIO_PORTF_BASE, ALL_BUTTONS);
+
+    //  DBC: FromISR porque estoy en un rutina de tratamiento de interrupcion
+    //  DBC: Pasamos un valor por referencia, escribe en la cola freeRTOS
+    if((i32PinStatus & LEFT_BUTTON))
+    {
+        xQueueSendFromISR(cola_freertos, 1, &higherPriorityTaskWoken);
+    }
+    else if((i32PinStatus & RIGHT_BUTTON))
+    {
+        xQueueSendFromISR(cola_freertos, 2, &higherPriorityTaskWoken);
+    }
+    
+    MAP_GPIOIntClear(GPIO_PORTF_BASE, ALL_BUTTONS);
+
+    //  DBC: Ahora hay que comprobar si hay que hacer el cambio de contexto
+    //  DBC: Se puede hacer con CUALQUIERA de las dos lineas siguientes (las dos hacen lo mismo)
+    portEND_SWITCHING_ISR(higherPriorityTaskWoken);
+}
