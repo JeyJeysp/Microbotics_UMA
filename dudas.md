@@ -1,2 +1,3 @@
-- Preguntar sobre '*GPIOPadConfigSet*'.
+- Preguntar sobre '*GPIOPadConfigSet*' (pull_up).
+- Antirrebotes con *vTaskDelay* y con *xQueueReset*.
 - ?
