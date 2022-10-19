@@ -1,0 +1,2 @@
+- Preguntar sobre '*GPIOPadConfigSet*'.
+- ?
