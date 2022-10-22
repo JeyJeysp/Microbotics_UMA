@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.ti.ccstudio.project.ui.internal.preferences.DynamicPreferencePageManager">
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.properties.DynamicPropertiesPageManager">
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.wizards.importexport.ProjectImportPage">
+		<item key="CCS.BROWSE_ZIPS_FILTER" value="C:\Users\JM&apos;s realm\Desktop\Ejercicio6\Ejemplo QT-TIVA(Leds)\base-practica-TIVA-2021.zip"/>
+		<item key="CCS.COPY_INTO_WORKSPACE" value="false"/>
+		<item key="CCS.IMPORT_REFERENCED_PROJECTS" value="false"/>
+		<item key="CCS.IMPORT_FROM_ARCHIVE" value="true"/>
+		<item key="CCS.BROWSE_DIRS_FILTER" value="C:\Users\JM&apos;s realm\Desktop\TestServosTIVA\TestServosTIVA"/>
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.wizards.project.ProjectSettingsPage">
+		<section name="1">
+		</section>
+	</section>
+</section>

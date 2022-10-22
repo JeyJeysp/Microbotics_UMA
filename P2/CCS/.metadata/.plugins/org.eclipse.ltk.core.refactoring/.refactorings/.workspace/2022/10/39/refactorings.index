@@ -1,0 +1,6 @@
+1664705347374	Rename resource 'base-practica-TIVA-2022-ADC'
+1664705413796	Delete resource 'P1/drivers/configADC.c'
+1664705415798	Delete resource 'P1/drivers/configADC.h'
+1664706090679	Delete resource 'P1/Debug'
+1664713440425	Delete resource 'P1/usblib'
+1664713443160	Delete resource 'P1/remotelink'

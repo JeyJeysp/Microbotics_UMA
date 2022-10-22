@@ -1,0 +1,50 @@
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "inc/hw_ints.h"
+
+#include "driverlib/pwm.h"
+#include "driverlib/gpio.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/timer.h"
+#include "drivers/buttons.h"
+#include "driverlib/uart.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
+#include "drivers/Sensors.h"
+
+void config_sensors(void)
+{
+    /*
+
+         Configuracion PA3 para el whisker delantero
+
+     */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_GPIOA);
+
+    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, PIN_WHISK_FRONT | PIN_WHISK_BACK);
+
+    GPIOIntTypeSet(GPIO_PORTA_BASE, PIN_WHISK_FRONT | PIN_WHISK_BACK, GPIO_FALLING_EDGE);
+
+    // DUDA PREGUNTAR EN CLASE
+    GPIOPadConfigSet(GPIO_PORTA_BASE, PIN_WHISK_FRONT | PIN_WHISK_BACK, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+
+    IntPrioritySet(INT_GPIOA, configMAX_SYSCALL_INTERRUPT_PRIORITY);
+    GPIOIntEnable(GPIO_PORTA_BASE, PIN_WHISK_FRONT | PIN_WHISK_BACK);
+    IntEnable(INT_GPIOA);
+
+    /*
+
+         Configuracion PA 6 & 7 para LEDs del Sharp
+
+     */
+    GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, PIN_LED_SHARP_1 | PIN_LED_SHARP_2);
+    GPIOPinWrite(GPIO_PORTA_BASE, PIN_LED_SHARP_1 | PIN_LED_SHARP_2, 0);
+}

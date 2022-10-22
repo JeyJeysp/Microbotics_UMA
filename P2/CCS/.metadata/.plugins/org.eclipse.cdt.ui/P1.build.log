@@ -1,0 +1,311 @@
+
+**** Build of configuration Debug for project P1 ****
+
+"C:\\ti\\ccs1110\\ccs\\utils\\bin\\gmake" -k all 
+ 
+Building file: "../commands.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="commands.d_raw"  "../commands.c"
+"..\drivers/Servos.h", line 47: warning #1-D: last line of file ends without a newline
+"../commands.c", line 42: warning #48-D: incompatible redefinition of macro "STOPCOUNT_DER" (declared at line 9 of "..\drivers/Servos.h")
+"../commands.c", line 44: warning #48-D: incompatible redefinition of macro "STOPCOUNT_IZQ" (declared at line 11 of "..\drivers/Servos.h")
+"../commands.c", line 150: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 150: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 154: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 154: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 170: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 170: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 174: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 174: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 190: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 190: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 194: warning #43-D: operand types are incompatible ("char *" and "int")
+"../commands.c", line 194: warning #154-D: conversion of nonzero integer to pointer
+"../commands.c", line 289: warning #169-D: argument of type "signed char *" is incompatible with parameter of type "const char *const"
+"../commands.c", line 290: warning #1-D: last line of file ends without a newline
+"../commands.c", line 182: warning #179-D: function "Cmd_movimientorotatorio_motor" was declared but never referenced
+Finished building: "../commands.c"
+ 
+Building file: "../main.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"..\commands.h", line 8: warning #1-D: last line of file ends without a newline
+"..\drivers/Servos.h", line 47: warning #1-D: last line of file ends without a newline
+"../main.c", line 160: warning #169-D: argument of type "int" is incompatible with parameter of type "const void *const"
+"../main.c", line 160: warning #154-D: conversion of nonzero integer to pointer
+"../main.c", line 164: warning #169-D: argument of type "int" is incompatible with parameter of type "const void *const"
+"../main.c", line 164: warning #154-D: conversion of nonzero integer to pointer
+"../main.c", line 92: warning #179-D: function "TareaCambioPWM" was declared but never referenced
+Finished building: "../main.c"
+ 
+Building file: "../startup_ccs.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="startup_ccs.d_raw"  "../startup_ccs.c"
+Finished building: "../startup_ccs.c"
+ 
+Building file: "../FreeRTOS/Source/croutine.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/croutine.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/croutine.c"
+Finished building: "../FreeRTOS/Source/croutine.c"
+ 
+Building file: "../FreeRTOS/Source/event_groups.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/event_groups.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/event_groups.c"
+Finished building: "../FreeRTOS/Source/event_groups.c"
+ 
+Building file: "../FreeRTOS/Source/list.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/list.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/list.c"
+Finished building: "../FreeRTOS/Source/list.c"
+ 
+Building file: "../FreeRTOS/Source/queue.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/queue.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/queue.c"
+Finished building: "../FreeRTOS/Source/queue.c"
+ 
+Building file: "../FreeRTOS/Source/stream_buffer.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/stream_buffer.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/stream_buffer.c"
+Finished building: "../FreeRTOS/Source/stream_buffer.c"
+ 
+Building file: "../FreeRTOS/Source/tasks.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/tasks.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/tasks.c"
+Finished building: "../FreeRTOS/Source/tasks.c"
+ 
+Building file: "../FreeRTOS/Source/timers.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/timers.d_raw" --obj_directory="FreeRTOS/Source"  "../FreeRTOS/Source/timers.c"
+Finished building: "../FreeRTOS/Source/timers.c"
+ 
+Building file: "../FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/portable/CCS/ARM_CM4F/port.d_raw" --obj_directory="FreeRTOS/Source/portable/CCS/ARM_CM4F"  "../FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c"
+Finished building: "../FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c"
+ 
+Building file: "../FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.d_raw" --obj_directory="FreeRTOS/Source/portable/CCS/ARM_CM4F"  "../FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm"
+Finished building: "../FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm"
+ 
+Building file: "../FreeRTOS/Source/portable/MemMang/heap_4.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="FreeRTOS/Source/portable/MemMang/heap_4.d_raw" --obj_directory="FreeRTOS/Source/portable/MemMang"  "../FreeRTOS/Source/portable/MemMang/heap_4.c"
+Finished building: "../FreeRTOS/Source/portable/MemMang/heap_4.c"
+ 
+Building file: "../driverlib/adc.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/adc.d_raw" --obj_directory="driverlib"  "../driverlib/adc.c"
+Finished building: "../driverlib/adc.c"
+ 
+Building file: "../driverlib/aes.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/aes.d_raw" --obj_directory="driverlib"  "../driverlib/aes.c"
+Finished building: "../driverlib/aes.c"
+ 
+Building file: "../driverlib/can.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/can.d_raw" --obj_directory="driverlib"  "../driverlib/can.c"
+Finished building: "../driverlib/can.c"
+ 
+Building file: "../driverlib/comp.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/comp.d_raw" --obj_directory="driverlib"  "../driverlib/comp.c"
+Finished building: "../driverlib/comp.c"
+ 
+Building file: "../driverlib/cpu.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/cpu.d_raw" --obj_directory="driverlib"  "../driverlib/cpu.c"
+Finished building: "../driverlib/cpu.c"
+ 
+Building file: "../driverlib/crc.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/crc.d_raw" --obj_directory="driverlib"  "../driverlib/crc.c"
+Finished building: "../driverlib/crc.c"
+ 
+Building file: "../driverlib/des.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/des.d_raw" --obj_directory="driverlib"  "../driverlib/des.c"
+Finished building: "../driverlib/des.c"
+ 
+Building file: "../driverlib/eeprom.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/eeprom.d_raw" --obj_directory="driverlib"  "../driverlib/eeprom.c"
+Finished building: "../driverlib/eeprom.c"
+ 
+Building file: "../driverlib/emac.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/emac.d_raw" --obj_directory="driverlib"  "../driverlib/emac.c"
+Finished building: "../driverlib/emac.c"
+ 
+Building file: "../driverlib/epi.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/epi.d_raw" --obj_directory="driverlib"  "../driverlib/epi.c"
+Finished building: "../driverlib/epi.c"
+ 
+Building file: "../driverlib/epi_workaround_ccs.s"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/epi_workaround_ccs.d_raw" --obj_directory="driverlib"  "../driverlib/epi_workaround_ccs.s"
+Finished building: "../driverlib/epi_workaround_ccs.s"
+ 
+Building file: "../driverlib/flash.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/flash.d_raw" --obj_directory="driverlib"  "../driverlib/flash.c"
+Finished building: "../driverlib/flash.c"
+ 
+Building file: "../driverlib/fpu.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/fpu.d_raw" --obj_directory="driverlib"  "../driverlib/fpu.c"
+Finished building: "../driverlib/fpu.c"
+ 
+Building file: "../driverlib/gpio.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/gpio.d_raw" --obj_directory="driverlib"  "../driverlib/gpio.c"
+Finished building: "../driverlib/gpio.c"
+ 
+Building file: "../driverlib/hibernate.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/hibernate.d_raw" --obj_directory="driverlib"  "../driverlib/hibernate.c"
+Finished building: "../driverlib/hibernate.c"
+ 
+Building file: "../driverlib/i2c.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/i2c.d_raw" --obj_directory="driverlib"  "../driverlib/i2c.c"
+Finished building: "../driverlib/i2c.c"
+ 
+Building file: "../driverlib/interrupt.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/interrupt.d_raw" --obj_directory="driverlib"  "../driverlib/interrupt.c"
+Finished building: "../driverlib/interrupt.c"
+ 
+Building file: "../driverlib/lcd.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/lcd.d_raw" --obj_directory="driverlib"  "../driverlib/lcd.c"
+Finished building: "../driverlib/lcd.c"
+ 
+Building file: "../driverlib/mpu.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/mpu.d_raw" --obj_directory="driverlib"  "../driverlib/mpu.c"
+Finished building: "../driverlib/mpu.c"
+ 
+Building file: "../driverlib/onewire.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/onewire.d_raw" --obj_directory="driverlib"  "../driverlib/onewire.c"
+Finished building: "../driverlib/onewire.c"
+ 
+Building file: "../driverlib/pwm.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/pwm.d_raw" --obj_directory="driverlib"  "../driverlib/pwm.c"
+Finished building: "../driverlib/pwm.c"
+ 
+Building file: "../driverlib/qei.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/qei.d_raw" --obj_directory="driverlib"  "../driverlib/qei.c"
+Finished building: "../driverlib/qei.c"
+ 
+Building file: "../driverlib/shamd5.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/shamd5.d_raw" --obj_directory="driverlib"  "../driverlib/shamd5.c"
+Finished building: "../driverlib/shamd5.c"
+ 
+Building file: "../driverlib/ssi.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/ssi.d_raw" --obj_directory="driverlib"  "../driverlib/ssi.c"
+Finished building: "../driverlib/ssi.c"
+ 
+Building file: "../driverlib/sw_crc.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/sw_crc.d_raw" --obj_directory="driverlib"  "../driverlib/sw_crc.c"
+Finished building: "../driverlib/sw_crc.c"
+ 
+Building file: "../driverlib/sysctl.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/sysctl.d_raw" --obj_directory="driverlib"  "../driverlib/sysctl.c"
+Finished building: "../driverlib/sysctl.c"
+ 
+Building file: "../driverlib/sysexc.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/sysexc.d_raw" --obj_directory="driverlib"  "../driverlib/sysexc.c"
+Finished building: "../driverlib/sysexc.c"
+ 
+Building file: "../driverlib/systick.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/systick.d_raw" --obj_directory="driverlib"  "../driverlib/systick.c"
+Finished building: "../driverlib/systick.c"
+ 
+Building file: "../driverlib/timer.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/timer.d_raw" --obj_directory="driverlib"  "../driverlib/timer.c"
+Finished building: "../driverlib/timer.c"
+ 
+Building file: "../driverlib/uart.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/uart.d_raw" --obj_directory="driverlib"  "../driverlib/uart.c"
+Finished building: "../driverlib/uart.c"
+ 
+Building file: "../driverlib/udma.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/udma.d_raw" --obj_directory="driverlib"  "../driverlib/udma.c"
+Finished building: "../driverlib/udma.c"
+ 
+Building file: "../driverlib/usb.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/usb.d_raw" --obj_directory="driverlib"  "../driverlib/usb.c"
+Finished building: "../driverlib/usb.c"
+ 
+Building file: "../driverlib/watchdog.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="driverlib/watchdog.d_raw" --obj_directory="driverlib"  "../driverlib/watchdog.c"
+Finished building: "../driverlib/watchdog.c"
+ 
+Building file: "../drivers/Servos.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="drivers/Servos.d_raw" --obj_directory="drivers"  "../drivers/Servos.c"
+"C:/uB/P1_v2/P1/drivers/Servos.h", line 47: warning #1-D: last line of file ends without a newline
+"../drivers/Servos.c", line 106: warning #225-D: function "UARTprintf" declared implicitly
+"../drivers/Servos.c", line 124: warning #225-D: function "UARTprintf" declared implicitly
+"../drivers/Servos.c", line 166: warning #225-D: function "UARTprintf" declared implicitly
+"../drivers/Servos.c", line 178: warning #225-D: function "UARTprintf" declared implicitly
+"../drivers/Servos.c", line 187: warning #225-D: function "UARTprintf" declared implicitly
+"../drivers/Servos.c", line 189: warning #1-D: last line of file ends without a newline
+Finished building: "../drivers/Servos.c"
+ 
+Building file: "../drivers/buttons.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="drivers/buttons.d_raw" --obj_directory="drivers"  "../drivers/buttons.c"
+Finished building: "../drivers/buttons.c"
+ 
+Building file: "../drivers/rgb.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="drivers/rgb.d_raw" --obj_directory="drivers"  "../drivers/rgb.c"
+Finished building: "../drivers/rgb.c"
+ 
+Building file: "../utils/RunTimeStatsConfig.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="utils/RunTimeStatsConfig.d_raw" --obj_directory="utils"  "../utils/RunTimeStatsConfig.c"
+Finished building: "../utils/RunTimeStatsConfig.c"
+ 
+Building file: "../utils/cmdline.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="utils/cmdline.d_raw" --obj_directory="utils"  "../utils/cmdline.c"
+Finished building: "../utils/cmdline.c"
+ 
+Building file: "../utils/cpu_usage.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="utils/cpu_usage.d_raw" --obj_directory="utils"  "../utils/cpu_usage.c"
+Finished building: "../utils/cpu_usage.c"
+ 
+Building file: "../utils/uartstdio.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --include_path="C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --include_path="C:/uB/P1_v2/P1" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/include" --include_path="C:/uB/P1_v2/P1/FreeRTOS/Source/portable/CCS/ARM_CM4F" --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="utils/uartstdio.d_raw" --obj_directory="utils"  "../utils/uartstdio.c"
+"../utils/uartstdio.c", line 139: warning #552-D: variable "g_ui32PortNum" was set but never used
+Finished building: "../utils/uartstdio.c"
+ 
+Building target: "P1.out"
+Invoking: Arm Linker
+"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me -Ooff --define=ccs="ccs" --define=TARGET_IS_BLIZZARD_RB1 --define=UART_BUFFERED --define=WANT_CMDLINE_HISTORY --define=WANT_FREERTOS_SUPPORT --define=PART_TM4C123GH6PM --define=DEBUG -g --c89 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"P1.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="P1_linkInfo.xml" --rom_model -o "P1.out" "./commands.obj" "./main.obj" "./startup_ccs.obj" "./FreeRTOS/Source/croutine.obj" "./FreeRTOS/Source/event_groups.obj" "./FreeRTOS/Source/list.obj" "./FreeRTOS/Source/queue.obj" "./FreeRTOS/Source/stream_buffer.obj" "./FreeRTOS/Source/tasks.obj" "./FreeRTOS/Source/timers.obj" "./FreeRTOS/Source/portable/CCS/ARM_CM4F/port.obj" "./FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.obj" "./FreeRTOS/Source/portable/MemMang/heap_4.obj" "./driverlib/adc.obj" "./driverlib/aes.obj" "./driverlib/can.obj" "./driverlib/comp.obj" "./driverlib/cpu.obj" "./driverlib/crc.obj" "./driverlib/des.obj" "./driverlib/eeprom.obj" "./driverlib/emac.obj" "./driverlib/epi.obj" "./driverlib/epi_workaround_ccs.obj" "./driverlib/flash.obj" "./driverlib/fpu.obj" "./driverlib/gpio.obj" "./driverlib/hibernate.obj" "./driverlib/i2c.obj" "./driverlib/interrupt.obj" "./driverlib/lcd.obj" "./driverlib/mpu.obj" "./driverlib/onewire.obj" "./driverlib/pwm.obj" "./driverlib/qei.obj" "./driverlib/shamd5.obj" "./driverlib/ssi.obj" "./driverlib/sw_crc.obj" "./driverlib/sysctl.obj" "./driverlib/sysexc.obj" "./driverlib/systick.obj" "./driverlib/timer.obj" "./driverlib/uart.obj" "./driverlib/udma.obj" "./driverlib/usb.obj" "./driverlib/watchdog.obj" "./drivers/Servos.obj" "./drivers/buttons.obj" "./drivers/rgb.obj" "./utils/RunTimeStatsConfig.obj" "./utils/cmdline.obj" "./utils/cpu_usage.obj" "./utils/uartstdio.obj" "../tm4c123gh6pm.cmd"  -llibc.a 
+<Linking>
+Finished building target: "P1.out"
+ 
+
+**** Build Finished ****

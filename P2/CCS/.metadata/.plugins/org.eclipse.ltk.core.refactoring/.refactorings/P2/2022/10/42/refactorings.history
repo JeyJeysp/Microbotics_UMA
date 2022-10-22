@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;P2/drivers/configADC&apos; to &apos;configADC.h&apos;" description="Rename resource &apos;configADC&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="drivers/configADC" name="configADC.h" stamp="1666350429104" updateReferences="true"/>
+</session>
