@@ -1,3 +1,3 @@
-- Preguntar sobre '*GPIOPadConfigSet*' (pull_up).
-- Antirrebotes con *vTaskDelay* y con *xQueueReset*.
-- ?
+- Lookup table: si tengo 200 y el siguiente 250, ¿que pasa si leo 220 o 225?
+- ¿Vale funcion con intervalos?
+- 
