@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 //  Ciclos para amplitud de pulso de parada a 1.54ms (para que este parado el motor derecho)
-#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.0015)
+#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.001503)
 //  Ciclos para amplitud de pulso de parada a 1.55ms (para que este parado el motor izquierdo)
 #define STOPCOUNT_IZQ ((SysCtlClockGet() / 16) * 0.00154)
 

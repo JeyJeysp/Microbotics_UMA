@@ -1,0 +1,23 @@
+/*
+    Libreria para la implementacion de la funcionalidad de los Sensores
+    Daniel Bazo Correa & Juan Jose Navarrete Galvez
+*/
+#include <stdbool.h>
+#include <stdint.h>
+
+// Whisker delantero
+#define PIN_WHISK_FRONT GPIO_PIN_5
+#define PIN_WHISK_BACK GPIO_PIN_3
+
+#define PIN_LED_SHARP_1 GPIO_PIN_6
+#define PIN_LED_SHARP_2 GPIO_PIN_7
+
+// Sensor Sharp delantero de media distancia
+#define PIN_SHARP_FRONT GPIO_PIN_3
+
+unsigned short val_distancia[] = {30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 3};
+unsigned short val_voltaje_hex[] = {0x130, 0x152, 0x165, 0x186, 0x1A3, 0x1E2, 0x216, 0x23F,
+                                    0x2B0, 0x310, 0x3BE, 0x4A4, 0x5DF, 0x828, 0x9B5};
+
+unsigned short binary_lookup(unsigned short *A, unsigned short key, unsigned short imin, unsigned short imax);
+void config_sensors(void);

@@ -34,6 +34,8 @@
 */
 
 #include "drivers/Servos.h"
+#include "drivers/Sensors.h"
+#include "drivers/ColaEventos.h"
 
 
 extern uint32_t g_ui32CPUUsage;
@@ -232,6 +234,36 @@ static Cmd_movimientorotatorio_motor(int argc, char *argv[])
     return 0;
 }
 
+static Cmd_movcm(int argc, char *argv[])
+{
+    if(argc < 2)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    int val_cm = atoi(argv[1]);
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    return 0;
+}
+
+static Cmd_movgr(int argc, char *argv[])
+{
+    if(argc < 2)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    int val_gr = atoi(argv[1]);
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    return 0;
+}
+
 /*
 	Tabla con los comandos y su descripcion. Si quiero anadir alguno, debo hacerlo aqui
 	Este array tiene que ser global porque es utilizado por la biblioteca cmdline.c para implementar el interprete de comandos
@@ -254,6 +286,8 @@ tCmdLineEntry g_psCmdTable[] =
     { "w", Cmd_movimiento_rueda, " \t\t: Hacia delante, rueda derecha"},
     { "a", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda izquierda"},
     { "s", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda derecha"},
+    { "c", Cmd_movcm, " \t\t: Mover las 2 ruedas unos determinados centimetros."},
+    { "g", Cmd_movgr, " \t\t: Mover las 2 ruedas para rotar x grados"},
 #if ( configUSE_TRACE_FACILITY == 1 )
 	{ "tasks", Cmd_tasks, "\t\t: Muestra informacion de las tareas" },
 #endif

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="TaskDe"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="taskde"/>
+			<item value="cola_freertos"/>
+			<item value="vueltas_CNY"/>
+			<item value="configUSE_16_BIT_TICKS"/>
+			<item value="configSUPPORT_DYNAMIC_ALLOCATION"/>
+			<item value="TareaCambioPWM"/>
+			<item value="DBC"/>
+			<item value="cola_pa3"/>
 			<item value="PIN_SHARP_FRONT"/>
 			<item value="adc"/>
 			<item value="adc0"/>
@@ -15,19 +23,18 @@
 			<item value="Cmd_parar_motor"/>
 			<item value="q"/>
 			<item value="tasks"/>
-			<item value="USB0DeviceIntHandler"/>
-			<item value="Cmd_led"/>
-			<item value="ADC"/>
-			<item value="ADCIntHandler"/>
 		</list>
 		<list key="replacehistory">
+			<item value="TareaMovimiento"/>
+			<item value="COMENTARIOS"/>
+			<item value="cola_PA"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1164"/>
-		<item key="DIALOG_Y_ORIGIN" value="477"/>
+		<item key="DIALOG_X_ORIGIN" value="237"/>
+		<item key="DIALOG_Y_ORIGIN" value="282"/>
 		<item key="DIALOG_WIDTH" value="284"/>
 		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>
 </section>

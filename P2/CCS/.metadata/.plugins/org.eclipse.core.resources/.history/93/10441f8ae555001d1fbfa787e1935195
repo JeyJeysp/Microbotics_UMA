@@ -1,0 +1,410 @@
+/*
+ * MAX DELANTE --> 3450
+ * MEDIO (dutycycle[0] = 3738 a 3750 // dutycycle[1] = 3850 a 3862) --> 3738 a 3750
+ * MAX ATRAS --> 4050
+ */
+
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "inc/hw_ints.h"
+
+#include "driverlib/pwm.h"
+#include "driverlib/gpio.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/timer.h"
+#include "drivers/buttons.h"
+#include "driverlib/uart.h"
+#include "utils/uartstdio.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "math.h"
+
+#include "drivers/Servos.h"
+
+/*
+    DBC:
+
+    Declaracion de globales
+*/
+uint32_t ui32Period, ui32DutyCycle[2];
+
+/*
+    DBC:
+
+    Implementacion de las funciones del Servo Motor
+*/
+
+void servos_init(void)
+{
+    /*
+        DBC:
+
+        Dividir el periodo del PWM para ajustarse al maximo ( periodo onda PWM maximo de 65535)), tenemos que al dividirlo entre 16
+        ya que es el minimo valor que deja un valor exacto en el periodo y que se encuentra por debajo del limite
+    */
+    SysCtlPWMClockSet(SYSCTL_PWMDIV_16);
+
+    /*
+        Configura pulsadores placa TIVA (int. por flanco de bajada)
+
+        DBC:
+
+        Inicializa los botones y habilita sus interrupciones
+     */
+    ButtonsInit();
+    //  DBC: Configuracion a flanco de bajada
+    GPIOIntTypeSet(GPIO_PORTF_BASE, ALL_BUTTONS, GPIO_FALLING_EDGE);
+    GPIOIntEnable(GPIO_PORTF_BASE, ALL_BUTTONS);
+    IntEnable(INT_GPIOF);
+
+    /*
+        Configuracion ondas PWM: frecuencia 50Hz, anchura inicial = valor STOPCOUNT, 1540us
+        para salida por PF2, y COUNT_1MS (o COUNT_2MS ) para salida por PF3(puedes ponerlo
+        inicialmente a PERIOD_PWM/10)
+
+        DBC:
+
+        Tenemos que PF2 emplea el modulo PWM M1, con PWM6 Y PF3 M1 con PWM7
+    */
+    //  DBC: Habilitamos el modulo M1 del PWM
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
+    //  DBC: Habilitamos el bajo consumo del periferico
+    SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_PWM1);
+    //  DBC: Configuramos los pines como salida PWM
+    GPIOPinTypePWM(GPIO_PORTF_BASE, GPIO_PIN_2|GPIO_PIN_3);
+    GPIOPinConfigure(GPIO_PF2_M1PWM6);
+    GPIOPinConfigure(GPIO_PF3_M1PWM7);
+
+    //  DBC: (pagina 207 DriverLib) PWM_GEN_3 cubre a M1PWM6 y M1PWM7
+    PWMGenConfigure(PWM1_BASE, PWM_GEN_3, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
+
+    ui32Period = PERIOD_PWM;
+    ui32DutyCycle[0] = STOPCOUNT_DER;
+    ui32DutyCycle[1] = STOPCOUNT_IZQ;
+
+    // Carga la cuenta que establece la frecuencia de la senal PWM
+    PWMGenPeriodSet(PWM1_BASE, PWM_GEN_3, ui32Period);
+    //Habilita/pone en marcha el generador PWM
+    PWMGenEnable(PWM1_BASE, PWM_GEN_3);
+    // Habilita la salida de la senal
+    PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT|PWM_OUT_7_BIT, true);
+
+    // DBC: Establece el periodo inicial. En este caso permaneceran quietas
+    // PF2, salida de PWM 6, motor derecho
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+    // PF3, salida de PWM 7, motor izquierdo
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+
+    estado = 0;     //Inicializamos en MOV_RECTO
+    DCanterior[0] = STOPCOUNT_DER;
+    DCanterior[1] = STOPCOUNT_IZQ;
+}
+
+/*
+    Rutinas de interrupcion de pulsadores
+    Boton Izquierdo: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_1MS
+    Boton Derecho: modifica ciclo de trabajo en CYCLE_INCREMENTS para el servo conectado a PF2, hasta llegar a COUNT_2MS
+*/
+void mov_rectilineo_servos(uint32_t ui32Status)     //NOTA: dejamos esta funcion para usar los botones.
+{
+    if (estado == 1)
+    {
+        ui32DutyCycle[0] = DCanterior[0];
+        ui32DutyCycle[1] = DCanterior[1];
+
+        estado = 0;
+    }
+
+    // DBC: Cuando pulsamos el boton izquierdo
+    if(ui32Status == 1)
+    {
+        UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_1MS);
+        if(ui32DutyCycle[0] > COUNT_1MS)
+        {
+            ui32DutyCycle[0] -= CYCLE_INCREMENTS;
+            ui32DutyCycle[1] += CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, marcha hacia delante\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, marcha hacia delante\r\n");
+        }
+    }
+
+    //  DBC: Cuando pulsamos el boton derecho
+    else if(ui32Status == 2)
+    {
+        UARTprintf("Cycle[0]: %d, Cycle[1]: %d, Count: %d\r\n", ui32DutyCycle[0], ui32DutyCycle[1], (uint32_t)COUNT_2MS);
+        if(ui32DutyCycle[0] < COUNT_2MS)
+        {
+            ui32DutyCycle[0] += CYCLE_INCREMENTS;
+            ui32DutyCycle[1] -= CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, marcha hacia atras\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, marcha hacia atras\r\n");
+        }
+    }
+}
+
+void mov_curvo_servos(uint32_t ui32Status)
+{
+    /*
+        DBC: 
+        
+        Cuando pulsamos el boton izquierdo girara a la izquierda. Para ello, la rueda derecha debera girar mas que la rueda izquierda.
+        El angulo de giro sera mayor cuanto mayor sea la diferencia de velocidad.
+    */ 
+    if(ui32Status == 1)         //GIRO IZQUIERDA
+    {
+        // COUNT_1MS es el tope maximo para alante de la salida 6 del PWM (motor derecho)
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, COUNT_2MS/2);
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, STOPCOUNT_IZQ);
+    }
+
+    /*
+        DBC: 
+        
+        Cuando pulsamos el boton derecho girara a la derecha. Para ello, la rueda izquierda debera girar mas que la rueda derecha.
+        El angulo de giro sera mayor cuanto mayor sea la diferencia de velocidad.
+    */ 
+    else if(ui32Status == 2)        //GIRO DERECHA
+    {
+        // COUNT_2MS es el tope maximo para delante de la salida 7 del PWM (motor izquierdo)
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, STOPCOUNT_DER);
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, COUNT_1MS*2);
+        UARTprintf("Aumento el ciclo, marcha atras\r\n");
+    }
+}
+
+void mov_rotatorio_servos(uint32_t ui32Status)
+{
+    if (estado == 0)
+    {
+        DCanterior[0] = ui32DutyCycle[0];
+        DCanterior[1] = ui32DutyCycle[1];
+
+        ui32DutyCycle[0] = STOPCOUNT_DER;
+        ui32DutyCycle[1] = STOPCOUNT_IZQ;
+
+        estado = 1;
+    }
+
+    // DBC: Cuando pulsamos el boton izquierdo
+    if(ui32Status == 1 && ui32DutyCycle[0] > COUNT_1MS)
+    {
+        ui32DutyCycle[0] -= CYCLE_INCREMENTS;
+        ui32DutyCycle[1] -= CYCLE_INCREMENTS;
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+        UARTprintf("Aumento el ciclo, hacia delante\r\n");
+    }
+
+    //  DBC: Cuando pulsamos el boton derecho
+    else if(ui32Status == 2 && ui32DutyCycle[0] < COUNT_2MS)
+    {
+        ui32DutyCycle[0] += CYCLE_INCREMENTS;
+        ui32DutyCycle[1] += CYCLE_INCREMENTS;
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+        UARTprintf("Aumento el ciclo, hacia atras\r\n");
+    }
+}
+
+void parar_pausar_motor(uint32_t ui32Status)
+{
+    // JJNG: Cuando mandamos un 1 queremos hacer RESET del motor. 2 es pausa.
+    if (ui32Status == 1)
+    {
+        ui32DutyCycle[0] = STOPCOUNT_DER;
+        ui32DutyCycle[1] = STOPCOUNT_IZQ;
+    }
+
+
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, STOPCOUNT_DER);
+    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, STOPCOUNT_IZQ);
+}
+
+
+
+void mov_una_rueda(uint32_t ui32Status)
+{
+    if (estado == 1)
+    {
+        ui32DutyCycle[0] = DCanterior[0];
+        ui32DutyCycle[1] = DCanterior[1];
+
+        estado = 0;
+    }
+
+    if(ui32Status == 1)      //RUEDA DERECHA - HACIA DELANTE
+    {
+        if(ui32DutyCycle[0] > COUNT_1MS)
+        {
+            ui32DutyCycle[0] -= CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia delante\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda D marcha hacia delante\r\n");
+        }
+    }
+    else if(ui32Status == 2)       //RUEDA IZQUIERDA - HACIA DELANTE
+    {
+        if(ui32DutyCycle[1] < COUNT_2MS)
+        {
+            ui32DutyCycle[1] += CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia delante\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda I marcha hacia delante\r\n");
+        }
+    }
+    else if(ui32Status == 3)       //RUEDA DERECHA - HACIA ATRAS
+    {
+        if(ui32DutyCycle[0] < COUNT_2MS)
+        {
+            ui32DutyCycle[0] += CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia atras\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda D marcha hacia atras\r\n");
+        }
+    }
+    else if(ui32Status == 4)       //RUEDA IZQUIERDA - HACIA ATRAS
+    {
+        if(ui32DutyCycle[1] > COUNT_1MS)
+        {
+            ui32DutyCycle[1] -= CYCLE_INCREMENTS;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia atras\r\n");
+        }
+        else
+        {
+            UARTprintf("Tope del ciclo, rueda I marcha hacia atras\r\n");
+        }
+    }
+}
+
+void mov_rueda_Qt(uint8_t motor, int8_t porcentaje)
+{
+    if (estado == 1)
+    {
+        ui32DutyCycle[0] = DCanterior[0];
+        ui32DutyCycle[1] = DCanterior[1];
+
+        estado = 0;
+    }
+    // (abs(COUNT_1MS - COUNT_2MS)) / 2
+    if(motor == 2)      // Rueda Derecha
+    {
+        if(porcentaje > 0)  //RUEDA DERECHA - HACIA DELANTE
+        {
+            float div = porcentaje/100.0;
+            ui32DutyCycle[0] = STOPCOUNT_DER - (RECORRIDO_DER * div);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia delante\r\n");
+        }
+        else if(porcentaje == 0)
+        {
+            ui32DutyCycle[0] = STOPCOUNT_DER;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Parada rueda derecha\r\n");
+        }
+        else //RUEDA DERECHA - HACIA ATRAS
+        {
+            float div = porcentaje/-100.0;
+            ui32DutyCycle[0] = STOPCOUNT_DER + (RECORRIDO_DER * div);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+            UARTprintf("Aumento el ciclo, rueda D marcha hacia atras\r\n");
+        }
+
+    }
+    else if(motor == 1)       //RUEDA IZQUIERDA
+    {
+        if(porcentaje > 0) //RUEDA IZQUIERDA - HACIA DELANTE
+        {
+            float div = porcentaje/100.0;
+            ui32DutyCycle[1] = STOPCOUNT_IZQ + (RECORRIDO_IZQ_1 * div);
+            UARTprintf("Valor div: %d\t Valor DC: %d\n", div, ui32DutyCycle[1]);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia delante\r\n");
+        }
+        else if(porcentaje == 0)
+        {
+            ui32DutyCycle[1] = STOPCOUNT_IZQ;
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Parada rueda izquierda\r\n");
+        }
+        else //RUEDA IZQUIERDA - HACIA ATRAS
+        {
+            float div = porcentaje/-100.0;
+            ui32DutyCycle[1] = STOPCOUNT_IZQ - (RECORRIDO_IZQ_2 * div);
+            UARTprintf("Valor div: %d\t Valor DC: %d\n", div, ui32DutyCycle[1]);
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+            UARTprintf("Aumento el ciclo, rueda I marcha hacia atras\r\n");
+        }
+    }
+    else if(motor == 0)
+    {
+        ui32DutyCycle[0] = STOPCOUNT_DER;
+        ui32DutyCycle[1] = STOPCOUNT_IZQ;
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
+        PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7, ui32DutyCycle[1]);
+        UARTprintf("Paradas ruedas\r\n");
+    }
+}
+
+
+void mover_robot(int c)     //Mover el robot por cm
+{
+    /*
+          CUENTAS: la distancia recorrida se rige por D = (R/2)*(angulo_L + angulo_R)
+                   Suponiendo que 'angulo_R = angulo_L', D = (R/2)*(2*angulo) = R*angulo
+
+                   Teniendo en cuenta que nuestro CNY se activa con flanco de subida, lo haría
+                   al pasar de la franja blanca a, nuevamente, otra franja blanca. En ese tiempo
+                   recorremos un ángulo de 60º, lo que se traduce por (con R=3) una distancia
+                   de en torno a 3 cm. Es decir, una vez activemos el motor, cada vez que salte
+                   una interrupcion habremos avanzado 3 cm aproximadamente.
+
+                   Por ello, si queremos calcular cuantas interrupciones necesitamos, basta con
+                   hacer el siguiente calculo: num_vueltas = c/R (siendo c la distancia que se le
+                   pasa a la funcion).
+
+           NOTAS: 1. Los angulos deben ser tratados en radianes (angulo*pi/180)
+                  2. La rueda mide 18.85 cm (segun 'l = 2*pi*R')
+                  3. La distancia que podemos recorrer debe ser multiplo de 3.
+     */
+
+    int vueltas = round(c/3);
+
+
+
+
+
+}
+
+void girar_robot(int g)     //Mover el robot por grado
+{
+
+
+}
+

@@ -1,9 +1,3 @@
-// En este archivo se configura el ADC al completo:
-// 1.- Trigger
-// 2.- Inicialización de la secuencia
-// 3.- Recibir de la cola
-// 4.- Interrupción del ADC
-
 #include<stdint.h>
 #include<stdbool.h>
 

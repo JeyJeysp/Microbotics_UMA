@@ -26,6 +26,7 @@
 #include "queue.h"
 
 #include "drivers/Servos.h"
+#include "drivers/Sensors.h"
 
 /*
     DBC:
@@ -334,7 +335,6 @@ void mov_rueda_Qt(uint8_t motor, int8_t porcentaje)
             PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui32DutyCycle[0]);
             UARTprintf("Aumento el ciclo, rueda D marcha hacia atras\r\n");
         }
-
     }
     else if(motor == 1)       //RUEDA IZQUIERDA
     {

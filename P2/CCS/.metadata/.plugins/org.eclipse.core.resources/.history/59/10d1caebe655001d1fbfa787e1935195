@@ -1,0 +1,16 @@
+#ifndef COLAEVENTOS_H_
+#define COLAEVENTOS_H_
+
+
+#include "event_groups.h"
+
+// Manejador para el flag de eventos
+extern EventGroupHandle_t FlagsEventos;
+
+// Etiquetas de eventos
+#define BOTONES 0x0001
+#define MOV_RECT 0x0002
+#define MOV_GIRO 0x0004
+
+
+#endif
