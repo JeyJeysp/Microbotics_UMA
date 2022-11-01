@@ -12,15 +12,15 @@ driverlib/aes.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/includ
 driverlib/aes.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 driverlib/aes.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
 driverlib/aes.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_aes.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ccm.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ints.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_memmap.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_nvic.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/aes.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h
-driverlib/aes.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_aes.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ccm.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ints.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_memmap.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_nvic.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/aes.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h
+driverlib/aes.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h
 
 ../driverlib/aes.c:
 
@@ -46,21 +46,21 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_aes.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_aes.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ccm.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ccm.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ints.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ints.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_memmap.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_memmap.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_nvic.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_nvic.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/aes.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/aes.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h:
 

@@ -1,0 +1,380 @@
+#include <stdbool.h>
+#include <stdint.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_sysctl.h"
+#include "inc/hw_types.h"
+
+#include "driverlib/pwm.h"
+#include "driverlib/debug.h"
+#include "driverlib/gpio.h"
+#include "driverlib/uart.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/rom.h"
+#include "drivers/rgb.h"
+
+#include "utils/cpu_usage.h"
+#include "utils/cmdline.h"
+#include "utils/uartstdio.h"
+
+/*
+	DBC:
+
+	Librerias anadidas por nosotros
+*/
+
+#include "drivers/Servos.h"
+#include "drivers/Sensors.h"
+#include "drivers/ColaEventos.h"
+
+
+extern uint32_t g_ui32CPUUsage;
+
+static int  Cmd_cpu (int argc, char *argv[])
+{
+    UARTprintf("ARM Cortex-M4F %u MHz - ",SysCtlClockGet() / 1000000);
+    UARTprintf("%2u%% de uso\r\n", (g_ui32CPUUsage+32768) >> 16);
+
+    return(0);
+}
+
+static int Cmd_free (int argc, char *argv[])
+{
+    UARTprintf("%d bytes libres\r\n", xPortGetFreeHeapSize());
+
+    return(0);
+}
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+
+extern char *__stack;
+
+static  int Cmd_tasks (int argc, char *argv[])
+{
+	char*	pcBuffer;
+	uint8_t*	pi8Stack;
+	portBASE_TYPE	x;
+	
+	pcBuffer = pvPortMalloc(1024);
+	vTaskList(pcBuffer);
+	UARTprintf("\t\t\t\tUnused\r\nTaskName\tStatus\tPri\tStack\tTask ID\r\n");
+	UARTprintf("=======================================================\r\n");
+	UARTprintf("%s", pcBuffer);
+	
+	x = 0;
+	pi8Stack = (uint8_t *) &__stack;
+
+	while (*pi8Stack++ == 0xA5)
+	{
+		x++;	//Esto solo funciona si hemos rellenado la pila del sistema con 0xA5 en el arranque
+	}
+
+	sprintf((char *) pcBuffer, "%%%us", configMAX_TASK_NAME_LEN);
+	sprintf((char *) &pcBuffer[10], (const char *) pcBuffer, "kernel");
+	UARTprintf("%s\t-\t*%u\t%u\t-\r\n", &pcBuffer[10], configKERNEL_INTERRUPT_PRIORITY, x/sizeof(portBASE_TYPE));
+	vPortFree(pcBuffer);
+	return 0;
+}
+
+#endif /* configUSE_TRACE_FACILITY */
+
+#if configGENERATE_RUN_TIME_STATS
+
+static Cmd_stats (int argc, char *argv[])
+{
+	char*	pBuffer;
+
+	pBuffer = pvPortMalloc(1024);
+	if (pBuffer)
+	{
+		vTaskGetRunTimeStats(pBuffer); //Es un poco inseguro, pero por ahora nos vale...
+		UARTprintf("TaskName\tCycles\t\tPercent\r\n");
+		UARTprintf("===============================================\r\r\n");
+		UARTprintf("%s", pBuffer);
+		vPortFree(pBuffer);
+	}
+
+	return 0;
+}
+#endif
+
+static int Cmd_help (int argc, char *argv[])
+{
+    tCmdLineEntry *pEntry;
+
+    UARTprintf("Comandos disponibles\r\n");
+    UARTprintf("------------------\r\n");
+
+    pEntry = &g_psCmdTable[0];
+
+    while(pEntry->pcCmd)
+    {
+        UARTprintf("%s%s\r\n", pEntry->pcCmd, pEntry->pcHelp);
+        pEntry++;
+    }
+
+    return(0);
+}
+
+static Cmd_parar_pausar_motor (int argc, char *argv[])
+{
+    if (argc < 1)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    if (0 == strncmp(argv[0], "p", 1))
+    {
+        parar_pausar_motor(1);
+    }
+    else if (0 == strncmp(argv[0], "pausa", 1))
+    {
+        parar_pausar_motor(2);
+    }
+
+    return 0;
+}
+
+static Cmd_movimiento_rueda (int argc, char *argv[])
+{
+    if (argc < 1)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    if (0 == strncmp(argv[0], "q", 1))
+    {
+        mov_una_rueda(2);
+    }
+    else if (0 == strncmp(argv[0], "w", 1))
+    {
+        mov_una_rueda(1);
+    }
+    else if (0 == strncmp(argv[0], "a", 1))
+    {
+        mov_una_rueda(4);
+    }
+    else if (0 == strncmp(argv[0], "s", 1))
+    {
+        mov_una_rueda(3);
+    }
+
+    return 0;
+}
+
+static Cmd_movimientocurvo_motor (int argc, char *argv[])
+{
+	if (argc < 1)
+	{
+		UARTprintf("Error al escribir comando\n");
+		return 0;
+	}
+
+    if (0 == strncmp(argv[0], "i", 1))
+	{
+		mov_curvo_servos(1);
+	}
+	else if (0 == strncmp(argv[0], "d", 1))
+	{
+		mov_curvo_servos(2);
+	}
+
+    return 0;
+}
+
+static Cmd_movimientorotatorio_motor (int argc, char *argv[])
+{
+	if (argc < 1)
+	{
+		UARTprintf("Error al escribir comando\n");
+		return 0;
+	}
+
+    if (0 == strncmp(argv[0], "e", 1))
+	{
+		mov_rotatorio_servos(1);
+	}
+	else if (0 == strncmp(argv[0], "r", 1))
+	{
+		mov_rotatorio_servos(2);
+	}
+
+    return 0;
+}
+
+static Cmd_movcm (int argc, char *argv[])
+{
+    if (argc < 2)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    int val_cm = atoi(argv[1]);
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    return 0;
+}
+
+static Cmd_movgr (int argc, char *argv[])
+{
+    if (argc < 2)
+    {
+        UARTprintf("Error al escribir comando\n");
+        return 0;
+    }
+
+    int val_gr = atoi(argv[1]);
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    return 0;
+}
+
+static Cmd_movej3 (int argc, char *argv[])
+{
+    int val_gr, val_cm;
+
+    val_cm = 12;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    val_cm = 18;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    val_cm = 12;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    val_cm = 18;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    return 0;
+}
+
+/*
+	Tabla con los comandos y su descripcion. Si quiero anadir alguno, debo hacerlo aqui
+	Este array tiene que ser global porque es utilizado por la biblioteca cmdline.c para implementar el interprete de comandos
+	No es muy elegante, pero es lo que ha implementado Texas Instruments.
+*/
+tCmdLineEntry g_psCmdTable[] =
+{
+    { "?", Cmd_help, "\t\t: Lista de comandos" },
+    { "cpu", Cmd_cpu, "\t\t: Muestra el uso de  CPU " },
+    { "free", Cmd_free, "\t\t: Muestra la memoria libre" },
+    { "p", Cmd_parar_pausar_motor, "\t\t: Parar motor (RESET del duty cycle)" },
+    { "pausa", Cmd_parar_pausar_motor, "\t\t: Pausar motor (PAUSA del duty cycle)" },
+	{ "d", Cmd_movimientocurvo_motor, " \t\t: Giro a la derecha"},
+	{ "i", Cmd_movimientocurvo_motor, " \t\t: Giro a la izquierda"},
+	{ "e", Cmd_movimientorotatorio_motor, " \t\t: Giro rotatorio a la izquierda"},
+	{ "r", Cmd_movimientorotatorio_motor, " \t\t: Giro rotatorio a la derecha"},
+    { "q", Cmd_movimiento_rueda, " \t\t: Hacia delante, rueda izquierda"},
+    { "w", Cmd_movimiento_rueda, " \t\t: Hacia delante, rueda derecha"},
+    { "a", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda izquierda"},
+    { "s", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda derecha"},
+    { "c", Cmd_movcm, " \t\t: Mover las 2 ruedas unos determinados centimetros."},
+    { "g", Cmd_movgr, " \t\t: Mover las 2 ruedas para rotar x grados"},
+    { "x", Cmd_movej3, " \t\t: Mover p2 ej3"},
+#if ( configUSE_TRACE_FACILITY == 1 )
+	{ "tasks", Cmd_tasks, "\t\t: Muestra informacion de las tareas" },
+#endif
+#if (configGENERATE_RUN_TIME_STATS)
+	{ "stats", Cmd_stats, "\t\t: Muestra estadisticas de las tareas" },
+#endif
+    { 0, 0, 0 }
+};
+
+static void vCommandTask( void *pvParameters )
+{
+    char    pcCmdBuf[64];
+    int32_t i32Status;
+
+    UARTprintf("\r\n\r\nWelcome to the TIVA FreeRTOS Demo!\r\n");
+	UARTprintf("\r\n\r\n FreeRTOS %s \r\n", tskKERNEL_VERSION_NUMBER);
+	UARTprintf("\r\n Teclee ? para ver la ayuda \r\n");
+	UARTprintf("> ");    
+
+	while (1)
+	{
+		/* Read data from the UART and process the command line */
+		UARTgets(pcCmdBuf, sizeof(pcCmdBuf));
+		if (strlen(pcCmdBuf) == 0)
+		{
+			UARTprintf("> ");
+			continue;
+		}
+
+		i32Status = CmdLineProcess(pcCmdBuf);
+
+		if (i32Status == CMDLINE_BAD_CMD)
+		{
+			UARTprintf("Comando erroneo!\r\n");	//No pongo acentos adrede
+		}
+
+		else if (i32Status == CMDLINE_TOO_MANY_ARGS)
+		{
+			UARTprintf("El interprete de comandos no admite tantos parametros\r\n");	//El maximo, CMDLINE_MAX_ARGS, esta definido en cmdline.c
+		}
+
+		else if (i32Status != 0)
+		{
+			UARTprintf("El comando devolvio el error %d\r\n",i32Status);
+		}
+
+		UARTprintf("> ");
+	}
+}
+
+// Create la tarea que gestiona los comandos (definida en el fichero commands.c)
+BaseType_t initCommandLine(uint16_t stack_size,uint8_t prioriry )
+{
+
+	/*
+		Inicializa la UARTy la configura a 115.200 bps, 8-N-1 .
+	    se usa para mandar y recibir mensajes y comandos por el puerto serie
+	    Mediante un programa terminal como gtkterm, putty, cutecom, etc...
+	*/
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    GPIOPinConfigure(GPIO_PA0_U0RX);
+    GPIOPinConfigure(GPIO_PA1_U0TX);
+    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+
+    //Esta funcion habilita la interrupcion de la UART y le da la prioridad adecuada si esta activado el soporte para FreeRTOS
+    UARTStdioConfig(0,115200,SysCtlClockGet());
+    SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_UART0);   //La UART tiene que seguir funcionando aunque el micro esta dormido
+
+    return xTaskCreate(vCommandTask, (signed portCHAR *)"UartComm", stack_size,NULL,prioriry, NULL);
+}

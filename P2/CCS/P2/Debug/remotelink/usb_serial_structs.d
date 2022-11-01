@@ -12,14 +12,14 @@ remotelink/usb_serial_structs.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_2
 remotelink/usb_serial_structs.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 remotelink/usb_serial_structs.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
 remotelink/usb_serial_structs.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usb-ids.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usbcdc.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevice.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevicepriv.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdcdc.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-remotelink/usb_serial_structs.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/usb.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usb-ids.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usbcdc.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevice.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevicepriv.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdcdc.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+remotelink/usb_serial_structs.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/usb.h
 remotelink/usb_serial_structs.obj: ../remotelink/usb_serial_structs.h
 
 ../remotelink/usb_serial_structs.c:
@@ -46,21 +46,21 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usb-ids.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usb-ids.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usbcdc.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usbcdc.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevice.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevice.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevicepriv.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevicepriv.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdcdc.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdcdc.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/usb.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/usb.h:
 
 ../remotelink/usb_serial_structs.h:
 

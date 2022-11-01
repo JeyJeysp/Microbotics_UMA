@@ -14,7 +14,7 @@ utils/cmdline.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/includ
 utils/cmdline.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
 utils/cmdline.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/string.h
 utils/cmdline.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/xlocale/_string.h
-utils/cmdline.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/utils/cmdline.h
+utils/cmdline.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/utils/cmdline.h
 
 ../utils/cmdline.c:
 
@@ -44,5 +44,5 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/string.h:
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/xlocale/_string.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/utils/cmdline.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/utils/cmdline.h:
 

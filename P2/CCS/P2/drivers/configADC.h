@@ -1,3 +1,7 @@
+/*
+    Libreria para la implementacion de la funcionalidad deL SHARP
+    Daniel Bazo Correa & Juan Jose Navarrete Galvez
+*/
 #ifndef CONFIGADC_H_
 #define CONFIGADC_H_
 

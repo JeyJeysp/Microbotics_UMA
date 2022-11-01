@@ -15,14 +15,14 @@ driverlib/hibernate.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/
 driverlib/hibernate.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/time.h
 driverlib/hibernate.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/abi_prefix.h
 driverlib/hibernate.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/xlocale/_time.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_hibernate.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ints.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_sysctl.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/hibernate.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h
-driverlib/hibernate.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/sysctl.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_hibernate.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ints.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_sysctl.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/hibernate.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h
+driverlib/hibernate.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/sysctl.h
 
 ../driverlib/hibernate.c:
 
@@ -54,19 +54,19 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/abi_prefix.h:
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/xlocale/_time.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_hibernate.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_hibernate.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_ints.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_ints.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_sysctl.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_sysctl.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/hibernate.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/hibernate.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/sysctl.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/sysctl.h:
 

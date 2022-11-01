@@ -12,12 +12,12 @@ driverlib/udma.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/inclu
 driverlib/udma.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
 driverlib/udma.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 driverlib/udma.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_sysctl.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_udma.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h
-driverlib/udma.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/udma.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_sysctl.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_udma.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h
+driverlib/udma.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/udma.h
 
 ../driverlib/udma.c:
 
@@ -43,15 +43,15 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_sysctl.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_sysctl.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_udma.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_udma.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/interrupt.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/interrupt.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/udma.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/udma.h:
 

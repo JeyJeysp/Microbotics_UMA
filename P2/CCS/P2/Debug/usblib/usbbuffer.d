@@ -12,10 +12,10 @@ usblib/usbbuffer.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/inc
 usblib/usbbuffer.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
 usblib/usbbuffer.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 usblib/usbbuffer.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
-usblib/usbbuffer.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-usblib/usbbuffer.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h
-usblib/usbbuffer.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h
-usblib/usbbuffer.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblibpriv.h
+usblib/usbbuffer.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+usblib/usbbuffer.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h
+usblib/usbbuffer.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h
+usblib/usbbuffer.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblibpriv.h
 
 ../usblib/usbbuffer.c:
 
@@ -41,11 +41,11 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/debug.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/debug.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblibpriv.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblibpriv.h:
 

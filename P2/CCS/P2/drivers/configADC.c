@@ -1,3 +1,7 @@
+/*
+    Libreria para la implementacion de la funcionalidad deL SHARP
+    Daniel Bazo Correa & Juan Jose Navarrete Galvez
+*/
 #include<stdint.h>
 #include<stdbool.h>
 

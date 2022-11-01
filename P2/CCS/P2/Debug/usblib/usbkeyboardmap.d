@@ -12,9 +12,9 @@ usblib/usbkeyboardmap.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LT
 usblib/usbkeyboardmap.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
 usblib/usbkeyboardmap.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 usblib/usbkeyboardmap.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
-usblib/usbkeyboardmap.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-usblib/usbkeyboardmap.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h
-usblib/usbkeyboardmap.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usbhid.h
+usblib/usbkeyboardmap.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+usblib/usbkeyboardmap.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h
+usblib/usbkeyboardmap.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usbhid.h
 
 ../usblib/usbkeyboardmap.c:
 
@@ -40,9 +40,9 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usbhid.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usbhid.h:
 

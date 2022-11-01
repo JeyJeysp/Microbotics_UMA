@@ -12,15 +12,15 @@ usblib/device/usbdhandler.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.
 usblib/device/usbdhandler.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
 usblib/device/usbdhandler.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 usblib/device/usbdhandler.obj: C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_memmap.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/rom.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/rom_map.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/usb.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblibpriv.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevice.h
-usblib/device/usbdhandler.obj: C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevicepriv.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_memmap.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/rom.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/rom_map.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/usb.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblibpriv.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevice.h
+usblib/device/usbdhandler.obj: C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevicepriv.h
 
 ../usblib/device/usbdhandler.c:
 
@@ -46,21 +46,21 @@ C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
 
 C:/ti/ccs1110/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_memmap.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_memmap.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/inc/hw_types.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/inc/hw_types.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/rom.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/rom.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/rom_map.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/rom_map.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/driverlib/usb.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/driverlib/usb.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblib.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblib.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/usblibpriv.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/usblibpriv.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevice.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevice.h:
 
-C:/Users/dbc/Desktop/Microbotics_UMA-main/P2/CCS/P2/usblib/device/usbdevicepriv.h:
+C:/Users/Daniel/Desktop/Microbotica\ Repo/Microbotics_UMA/P2/CCS/P2/usblib/device/usbdevicepriv.h:
 

@@ -9,10 +9,12 @@ extern EventGroupHandle_t FlagsEventos;
 extern QueueHandle_t colaCM, colaGrados;
 
 // Etiquetas de eventos
-#define BOTONES 0x0001
-#define RECTO 0x0002
-#define GIRAR 0x0004
-#define PARAR 0x0008
-#define PASOS_RUEDA 0X0010
+#define RECTO 0x0001
+#define GIRAR 0x0002
+#define PASOS_RUEDA_IZQ 0x0004
+#define PASOS_RUEDA_DER 0x0020
+
+#define FLAG_BOTON_DERECHO 0x0008
+#define FLAG_BOTON_IZQUIERDO 0x0010
 
 #endif

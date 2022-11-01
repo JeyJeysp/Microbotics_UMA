@@ -39,8 +39,9 @@
 
 
 extern uint32_t g_ui32CPUUsage;
+extern SemaphoreHandle_t semWhisker;
 
-static int  Cmd_cpu(int argc, char *argv[])
+static int  Cmd_cpu (int argc, char *argv[])
 {
     UARTprintf("ARM Cortex-M4F %u MHz - ",SysCtlClockGet() / 1000000);
     UARTprintf("%2u%% de uso\r\n", (g_ui32CPUUsage+32768) >> 16);
@@ -48,7 +49,7 @@ static int  Cmd_cpu(int argc, char *argv[])
     return(0);
 }
 
-static int Cmd_free(int argc, char *argv[])
+static int Cmd_free (int argc, char *argv[])
 {
     UARTprintf("%d bytes libres\r\n", xPortGetFreeHeapSize());
 
@@ -59,7 +60,7 @@ static int Cmd_free(int argc, char *argv[])
 
 extern char *__stack;
 
-static  int Cmd_tasks(int argc, char *argv[])
+static  int Cmd_tasks (int argc, char *argv[])
 {
 	char*	pcBuffer;
 	uint8_t*	pi8Stack;
@@ -90,7 +91,7 @@ static  int Cmd_tasks(int argc, char *argv[])
 
 #if configGENERATE_RUN_TIME_STATS
 
-static Cmd_stats(int argc, char *argv[])
+static Cmd_stats (int argc, char *argv[])
 {
 	char*	pBuffer;
 
@@ -108,7 +109,7 @@ static Cmd_stats(int argc, char *argv[])
 }
 #endif
 
-static int Cmd_help(int argc, char *argv[])
+static int Cmd_help (int argc, char *argv[])
 {
     tCmdLineEntry *pEntry;
 
@@ -126,19 +127,19 @@ static int Cmd_help(int argc, char *argv[])
     return(0);
 }
 
-static Cmd_parar_pausar_motor(int argc, char *argv[])
+static Cmd_parar_pausar_motor (int argc, char *argv[])
 {
-    if(argc < 1)
+    if (argc < 1)
     {
         UARTprintf("Error al escribir comando\n");
         return 0;
     }
 
-    if(0 == strncmp(argv[0], "p", 1))
+    if (0 == strncmp(argv[0], "p", 1))
     {
         parar_pausar_motor(1);
     }
-    else if(0 == strncmp(argv[0], "pausa", 1))
+    else if (0 == strncmp(argv[0], "pausa", 1))
     {
         parar_pausar_motor(2);
     }
@@ -146,47 +147,27 @@ static Cmd_parar_pausar_motor(int argc, char *argv[])
     return 0;
 }
 
-/*static Cmd_acelerar_motor(int argc, char *argv[])
+static Cmd_movimiento_rueda (int argc, char *argv[])
 {
-	if(argc < 1)
-	{
-		UARTprintf("Error al escribir comando\n");
-		return 0;
-	}
-
-	if(0 == strncmp(argv[0], "w", 1))
-	{
-		mov_rectilineo_servos(1);
-	}
-	else if(0 == strncmp(argv[0], "s", 1))
-	{
-		mov_rectilineo_servos(2);
-	}
-    
-    return 0;
-}*/
-
-static Cmd_movimiento_rueda(int argc, char *argv[])
-{
-    if(argc < 1)
+    if (argc < 1)
     {
         UARTprintf("Error al escribir comando\n");
         return 0;
     }
 
-    if(0 == strncmp(argv[0], "q", 1))
+    if (0 == strncmp(argv[0], "q", 1))
     {
         mov_una_rueda(2);
     }
-    else if(0 == strncmp(argv[0], "w", 1))
+    else if (0 == strncmp(argv[0], "w", 1))
     {
         mov_una_rueda(1);
     }
-    else if(0 == strncmp(argv[0], "a", 1))
+    else if (0 == strncmp(argv[0], "a", 1))
     {
         mov_una_rueda(4);
     }
-    else if(0 == strncmp(argv[0], "s", 1))
+    else if (0 == strncmp(argv[0], "s", 1))
     {
         mov_una_rueda(3);
     }
@@ -194,19 +175,19 @@ static Cmd_movimiento_rueda(int argc, char *argv[])
     return 0;
 }
 
-static Cmd_movimientocurvo_motor(int argc, char *argv[])
+static Cmd_movimientocurvo_motor (int argc, char *argv[])
 {
-	if(argc < 1)
+	if (argc < 1)
 	{
 		UARTprintf("Error al escribir comando\n");
 		return 0;
 	}
 
-    if(0 == strncmp(argv[0], "i", 1))
+    if (0 == strncmp(argv[0], "i", 1))
 	{
 		mov_curvo_servos(1);
 	}
-	else if(0 == strncmp(argv[0], "d", 1))
+	else if (0 == strncmp(argv[0], "d", 1))
 	{
 		mov_curvo_servos(2);
 	}
@@ -214,19 +195,19 @@ static Cmd_movimientocurvo_motor(int argc, char *argv[])
     return 0;
 }
 
-static Cmd_movimientorotatorio_motor(int argc, char *argv[])
+static Cmd_movimientorotatorio_motor (int argc, char *argv[])
 {
-	if(argc < 1)
+	if (argc < 1)
 	{
 		UARTprintf("Error al escribir comando\n");
 		return 0;
 	}
 
-    if(0 == strncmp(argv[0], "e", 1))
+    if (0 == strncmp(argv[0], "e", 1))
 	{
 		mov_rotatorio_servos(1);
 	}
-	else if(0 == strncmp(argv[0], "r", 1))
+	else if (0 == strncmp(argv[0], "r", 1))
 	{
 		mov_rotatorio_servos(2);
 	}
@@ -234,9 +215,9 @@ static Cmd_movimientorotatorio_motor(int argc, char *argv[])
     return 0;
 }
 
-static Cmd_movcm(int argc, char *argv[])
+static Cmd_movcm (int argc, char *argv[])
 {
-    if(argc < 2)
+    if (argc < 2)
     {
         UARTprintf("Error al escribir comando\n");
         return 0;
@@ -249,15 +230,63 @@ static Cmd_movcm(int argc, char *argv[])
     return 0;
 }
 
-static Cmd_movgr(int argc, char *argv[])
+static Cmd_movgr (int argc, char *argv[])
 {
-    if(argc < 2)
+    if (argc < 2)
     {
         UARTprintf("Error al escribir comando\n");
         return 0;
     }
 
     int val_gr = atoi(argv[1]);
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    return 0;
+}
+
+static Cmd_movej3 (int argc, char *argv[])
+{
+    int val_gr, val_cm;
+    xSemaphoreGive(semWhisker);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_cm = 12;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_cm = 15;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_cm = 12;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_gr = 90;
+    xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, GIRAR);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_cm = 15;
+    xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+    xEventGroupSetBits(FlagsEventos, RECTO);
+
+    xSemaphoreTake(semWhisker, portMAX_DELAY);
+    val_gr = 90;
     xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
     xEventGroupSetBits(FlagsEventos, GIRAR);
 
@@ -276,8 +305,6 @@ tCmdLineEntry g_psCmdTable[] =
     { "free", Cmd_free, "\t\t: Muestra la memoria libre" },
     { "p", Cmd_parar_pausar_motor, "\t\t: Parar motor (RESET del duty cycle)" },
     { "pausa", Cmd_parar_pausar_motor, "\t\t: Pausar motor (PAUSA del duty cycle)" },
-	//{ "w", Cmd_acelerar_motor, "\t\t: Activa switch izquierdo, marcha alante"},
-	//{ "s", Cmd_acelerar_motor, "\t\t: Activa switch derecho, marcha atrás"},
 	{ "d", Cmd_movimientocurvo_motor, " \t\t: Giro a la derecha"},
 	{ "i", Cmd_movimientocurvo_motor, " \t\t: Giro a la izquierda"},
 	{ "e", Cmd_movimientorotatorio_motor, " \t\t: Giro rotatorio a la izquierda"},
@@ -288,6 +315,7 @@ tCmdLineEntry g_psCmdTable[] =
     { "s", Cmd_movimiento_rueda, " \t\t: Hacia atras, rueda derecha"},
     { "c", Cmd_movcm, " \t\t: Mover las 2 ruedas unos determinados centimetros."},
     { "g", Cmd_movgr, " \t\t: Mover las 2 ruedas para rotar x grados"},
+    { "x", Cmd_movej3, " \t\t: Mover p2 ej3"},
 #if ( configUSE_TRACE_FACILITY == 1 )
 	{ "tasks", Cmd_tasks, "\t\t: Muestra informacion de las tareas" },
 #endif
@@ -319,17 +347,17 @@ static void vCommandTask( void *pvParameters )
 
 		i32Status = CmdLineProcess(pcCmdBuf);
 
-		if(i32Status == CMDLINE_BAD_CMD)
+		if (i32Status == CMDLINE_BAD_CMD)
 		{
 			UARTprintf("Comando erroneo!\r\n");	//No pongo acentos adrede
 		}
 
-		else if(i32Status == CMDLINE_TOO_MANY_ARGS)
+		else if (i32Status == CMDLINE_TOO_MANY_ARGS)
 		{
 			UARTprintf("El interprete de comandos no admite tantos parametros\r\n");	//El maximo, CMDLINE_MAX_ARGS, esta definido en cmdline.c
 		}
 
-		else if(i32Status != 0)
+		else if (i32Status != 0)
 		{
 			UARTprintf("El comando devolvio el error %d\r\n",i32Status);
 		}

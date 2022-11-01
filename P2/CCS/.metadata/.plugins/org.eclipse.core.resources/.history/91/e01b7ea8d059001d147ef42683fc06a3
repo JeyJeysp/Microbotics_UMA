@@ -1,0 +1,587 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "inc/hw_ints.h"
+
+#include "driverlib/pwm.h"
+#include "driverlib/gpio.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/rom.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/uart.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/adc.h"
+#include "driverlib/timer.h"
+#include "utils/uartstdio.h"
+#include "drivers/buttons.h"
+#include "drivers/rgb.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include "utils/cpu_usage.h"
+#include "commands.h"
+#include "timers.h"
+#include "math.h"
+
+#include "drivers/ColaEventos.h"
+#include "drivers/Servos.h"
+#include "drivers/Sensors.h"
+#include "drivers/configADC.h"
+
+#include <remotelink.h>
+#include <serialprotocol.h>
+
+//  Declaracion de los arrays para la tabla look-up
+unsigned short val_distancia[] = {30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 3};
+unsigned short val_voltaje_hex[] = {0x130, 0x152, 0x165, 0x186, 0x1A3, 0x1E2, 0x216, 0x23F,
+                                    0x2B0, 0x310, 0x3BE, 0x4A4, 0x5DF, 0x828, 0x9B5};
+
+//  Declaracion de globales
+QueueHandle_t colaBotones, colaPA, colaCM, colaGrados, colaCNY;
+uint32_t g_ui32CPUUsage, g_ulSystemClock;
+EventGroupHandle_t FlagsEventos;
+static SemaphoreHandle_t semWhisker;
+static bool control_whisker = 0;
+
+
+//  Definicion de la prioridad para la tarea y el tamano de pila
+#define MASTERTASKPRIO 1
+#define MASTERTASKSIZE 512
+#define REMOTELINK_TASK_STACK 512
+#define REMOTELINK_TASK_PRIORITY 2
+
+//  Prioridad para la tarea maestra
+#define WHISKERTASKPRIO 1
+#define WHISKERTASKSIZE 256
+
+
+
+
+#ifdef DEBUG
+
+    void __error__(char *nombrefich, uint32_t linea)
+    {
+        while (1);
+    }
+
+#endif
+
+void vApplicationStackOverflowHook(TaskHandle_t pxTask,  char *pcTaskName)
+{
+    while (1);
+}
+
+//  Esta es la funcion que ejecuta cuando el RTOS se queda sin memoria dinamica
+void vApplicationMallocFailedHook (void)
+{
+    while (1);
+}
+
+//  Esto se ejecuta cada Tick del sistema. LLeva la estadistica de uso de la CPU (tiempo que la CPU ha estado funcionando)
+void vApplicationTickHook( void )
+{
+    static uint8_t ui8Count = 0;
+
+    if (++ui8Count == 10)
+    {
+        g_ui32CPUUsage = CPUUsageTick();
+        ui8Count = 0;
+    }
+}
+
+//  Esto se ejecuta cada vez que entra a funcionar la tarea Idle
+void vApplicationIdleHook (void )
+{
+    SysCtlSleep();
+}
+
+//  Esta tarea esta definida en el fichero command.c, es la que se encarga de procesar los comandos.
+//  Aqui solo la declaramos para poderla crear en la funcion main.
+extern void vUARTTask(void *pvParameters);
+
+//Funcion callback que procesa los mensajes recibidos desde el PC (ejecuta las acciones correspondientes a las ordenes recibidas)
+static int32_t messageReceived(uint8_t message_type, void *parameters, int32_t parameterSize)
+{
+    //Estado de la ejecucion (positivo, sin errores, negativo si error)
+    int32_t status = 0;
+
+    //Comprueba el tipo de mensaje
+    switch (message_type)
+    {
+        case MESSAGE_PING:
+        {
+            status = remotelink_sendMessage(MESSAGE_PING, NULL, 0);
+        }
+
+        break;
+
+        case MESSAGE_MOTOR:
+        {
+            PARAM_MESSAGE_MOTOR parametro;
+
+            if (check_and_extract_command_param(parameters, parameterSize, &parametro, sizeof(parametro))>0)
+            {
+                UARTprintf("Recibo datos desde Qt: %d, %d.\r\n", parametro.id_motor, parametro.porcentaje_vel);
+                mov_rueda_Qt(parametro.id_motor, parametro.porcentaje_vel);
+            }
+            else
+            {
+                status = PROT_ERROR_INCORRECT_PARAM_SIZE;
+            }
+        }
+
+        break;
+
+        default:
+
+           status = PROT_ERROR_UNIMPLEMENTED_COMMAND;
+    }
+
+    return status;
+}
+
+static portTASK_FUNCTION (TareaMovimiento, pvParameters)
+{
+    uint32_t ui32Status;
+    int pasos_cm, pasos_grados, mensaje_mov, objetivo_cm, objetivo_grados;
+
+    EventBits_t eventos;
+
+    while (1)
+    {
+        eventos = xEventGroupWaitBits(FlagsEventos, BOTONES|RECTO|GIRAR|PASOS_RUEDA, pdTRUE, pdFALSE, portMAX_DELAY);
+
+        if (eventos & (BOTONES))
+        {
+            if (xQueueReceive(colaBotones, &ui32Status, portMAX_DELAY) == pdTRUE)
+            {
+                mov_rectilineo_servos(ui32Status);
+            }
+        }
+
+        if (eventos & (RECTO))
+        {
+            // Cola con la cantidad de centimetros a recorrer
+            if (xQueueReceive(colaCM, &mensaje_mov, portMAX_DELAY) == pdTRUE)
+            {
+                /*
+                    CUENTAS:
+
+                    la distancia recorrida se rige por D = (R/2)*(angulo_L + angulo_R)
+                    Suponiendo que 'angulo_R = angulo_L', D = (R/2)*(2*angulo) = R*angulo
+
+                    Teniendo en cuenta que nuestro CNY se activa con flanco de subida, lo haría
+                    al pasar de la franja blanca a, nuevamente, otra franja blanca. En ese tiempo
+                    recorremos un ángulo de 60º, lo que se traduce por (con R=3) una distancia
+                    de en torno a 3 cm. Es decir, una vez activemos el motor, cada vez que salte
+                    una interrupcion habremos avanzado 3 cm aproximadamente.
+
+                    Por ello, si queremos calcular cuantas interrupciones necesitamos, basta con
+                    hacer el siguiente calculo: num_vueltas = c/R (siendo c la distancia que se le
+                    pasa a la funcion).
+
+                    NOTAS:
+
+                    1. Los angulos deben ser tratados en radianes (angulo*pi/180)
+                    2. La rueda mide 18.85 cm (segun 'l = 2*pi*R')
+                    3. La distancia que podemos recorrer debe ser multiplo de 3.
+                 */
+
+                if (mensaje_mov >= 0)
+                {
+                    mov_rueda_Qt(RUEDA_IZQUIERDA, 100);
+                    mov_rueda_Qt(RUEDA_DERECHA, 100);
+
+                    objetivo_cm = round(mensaje_mov/3);
+                }
+                else
+                {
+                    mov_rueda_Qt(RUEDA_IZQUIERDA, -100);
+                    mov_rueda_Qt(RUEDA_DERECHA, -100);
+
+                    objetivo_cm = round(mensaje_mov/-3);
+                }
+
+                pasos_cm = 0;
+            }
+        }
+
+        if (eventos & (GIRAR))
+        {
+            // Cola con la cantidad de grados para girar
+
+            if (xQueueReceive(colaGrados, &mensaje_mov, portMAX_DELAY) == pdTRUE)
+            {
+                if (mensaje_mov >= 0)
+                {
+                    mov_rueda_Qt(RUEDA_IZQUIERDA, 100);
+                    mov_rueda_Qt(RUEDA_DERECHA, -100);
+
+                    objetivo_grados = round(mensaje_mov/30);
+                }
+                else
+                {
+                    mov_rueda_Qt(RUEDA_IZQUIERDA, -100);
+                    mov_rueda_Qt(RUEDA_DERECHA, 100);
+
+                    objetivo_grados = round(mensaje_mov/-30);
+                }
+
+                pasos_grados = 0;
+            }
+        }
+
+        if (eventos & (PASOS_RUEDA))
+        {
+            if (objetivo_cm != 0)
+            {
+                pasos_cm++;
+
+                if (pasos_cm == objetivo_cm)
+                {
+                    mov_rueda_Qt(AMBAS_RUEDAS, 0);
+                    objetivo_cm = 0;
+                    pasos_cm = 0;
+                    xEventGroupClearBits(FlagsEventos, RECTO);
+                    xSemaphoreGive(semWhisker);
+                }
+            }
+
+            if (objetivo_grados != 0)
+            {
+                pasos_grados++;
+
+                if (pasos_grados == objetivo_grados)
+                {
+                    mov_rueda_Qt(AMBAS_RUEDAS, 0);
+                    objetivo_grados = 0;
+                    pasos_grados = 0;
+                    xEventGroupClearBits(FlagsEventos, GIRAR);
+                    xSemaphoreGive(semWhisker);
+                }
+            }
+        }
+    }
+}
+
+static portTASK_FUNCTION (TareaCNY, pvParameters)
+{
+    uint32_t ui32Status;
+
+    while (1)
+    {
+        if ((xQueueReceive(colaCNY, &ui32Status, portMAX_DELAY) == pdTRUE))
+        {
+            switch(ui32Status)
+            {
+                case VAL_CNY_IZQ:
+                {
+                    UARTprintf("CNY izquierdo\r\n");
+                    xEventGroupSetBits(FlagsEventos, PASOS_RUEDA);
+                }
+
+                break;
+
+                case VAL_CNY_DER:
+                {
+                    UARTprintf("CNY derecho\r\n");
+                    xEventGroupSetBits(FlagsEventos, PASOS_RUEDA);
+                }
+
+                break;
+
+                default:
+                {
+                    UARTprintf("Tarea PA: comando desconocido.\r\n");
+                }
+
+                break;
+            }
+        }
+    }
+}
+
+static portTASK_FUNCTION (TareaPA, pvParameters)
+{
+    uint32_t ui32Status;
+    int val_gr, val_cm;
+
+    while (1)
+    {
+        if ((xQueueReceive(colaPA, &ui32Status, portMAX_DELAY) == pdTRUE))
+        {
+            switch(ui32Status)
+            {
+                case VAL_WHISK_FRONT:
+                {
+                    if (control_whisker == 1)
+                    {
+                        UARTprintf("Pulsado Whisker delantero\r\n");
+
+                        // Primero nos movemos hacia atras 3 cm
+                        val_cm = -3;
+                        xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+                        xEventGroupSetBits(FlagsEventos, RECTO);
+                        xSemaphoreTake(semWhisker, portMAX_DELAY);
+
+                        // Segundo, nos giramos 90 grados hacia atrás
+                        val_gr = -90;
+                        xQueueSend(colaGrados, &val_gr, portMAX_DELAY);
+                        xEventGroupSetBits(FlagsEventos, GIRAR);
+                        xSemaphoreTake(semWhisker, portMAX_DELAY);
+
+                        // Tercero, nos moveremos 9 cm por ejemplo
+                        val_cm = 9;
+                        xQueueSend(colaCM, &val_cm, portMAX_DELAY);
+                        xEventGroupSetBits(FlagsEventos, RECTO);
+                        xSemaphoreTake(semWhisker, portMAX_DELAY);
+
+                        control_whisker = 0;
+                    }
+                }
+
+                break;
+
+                case VAL_WHISK_BACK:
+                {
+                    UARTprintf("Pulsado Whisker trasero\r\n");
+                    mov_rueda_Qt(RUEDA_DERECHA, 0);
+                    mov_rueda_Qt(RUEDA_IZQUIERDA, 0);
+                    /*
+                                     // primer parametro indica el motor, 2 -> derecho
+                    mov_rueda_Qt(2, -100);
+                    // 1200ms, lo hemos hecho a ojo
+                    vTaskDelay(1200/portTICK_PERIOD_MS);
+                    mov_rueda_Qt(2, 0);
+                    xQueueReset(colaPA);*/
+                }
+
+                break;
+
+                default:
+                {
+                    UARTprintf("Tarea PA: comando desconocido.\r\n");
+                }
+
+                break;
+            }
+        }
+    }
+}
+
+static portTASK_FUNCTION (TareaADC0Sharp, pvParameters)
+{
+    MuestrasADC lectura;
+    unsigned short indice;
+    int tam_array = sizeof(val_voltaje_hex) / sizeof(unsigned short);
+
+    while (1)
+    {
+        configADC0_LeeADC0(&lectura);
+
+        indice = binary_lookup(val_voltaje_hex, lectura.chan, 0, tam_array);
+
+        if ((val_distancia[indice] >= val_distancia[tam_array - 2]) && (val_distancia[indice] <= val_distancia[0]))
+        {
+            if (indice >= 10)
+            {
+                UARTprintf("Obstaculo en rango cercano (4 a 10 cm).\r\n");
+            }
+            else if (indice >= 5)
+            {
+                UARTprintf("Obstaculo en rango medio (10 a 20 cm).\r\n");
+            }
+            else
+            {
+                UARTprintf("Obstaculo en rango lejano (20 a 30 cm).\r\n");
+            }
+        }
+        else
+        {
+            //UARTprintf("Fuera de rango (es decir, que no lo veo) \n");
+        }
+
+        vTaskDelay(portTICK_PERIOD_MS);
+    }
+}
+
+int main(void)
+{
+    colaCNY = xQueueCreate(2, sizeof(uint32_t));
+    if (colaCNY == NULL)
+    {
+        while (1);
+    }
+
+    semWhisker = xSemaphoreCreateBinary();
+    if (semWhisker == NULL)
+    {
+        while(1);
+    }
+
+    //Crea el grupo de eventos
+    FlagsEventos = xEventGroupCreate();
+    if (FlagsEventos == NULL)
+    {
+        while (1);
+    }
+
+    colaBotones = xQueueCreate(16, sizeof(uint32_t));
+    if (colaBotones == NULL)
+    {
+        while (1);
+    }
+
+    colaPA = xQueueCreate(10, sizeof(uint32_t));
+    if (colaPA == NULL)
+    {
+        while (1);
+    }
+
+    colaCM = xQueueCreate(1, sizeof(int));
+    if (colaCM == NULL)
+    {
+        while (1);
+    }
+
+    colaGrados = xQueueCreate(1, sizeof(int));
+    if (colaGrados == NULL)
+    {
+        while (1);
+    }
+
+    /*
+        Elegir reloj adecuado para los valores de ciclos sean de tamano soportable
+
+        COMENTARIOS:
+
+        Vamos a elegir un reloj del sistema a 40 MHz
+     */
+    SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+
+    // Get the system clock speed.
+    g_ulSystemClock = SysCtlClockGet();
+    // Habilita el clock gating de los perifericos durante el bajo consumo,
+    // perifericos que se desee activos en modo Sleep, deben habilitarse con SysCtlPeripheralSleepEnable
+    SysCtlPeripheralClockGating(true);
+    // Inicializa el subsistema de medida del uso de CPU (mide el tiempo que la CPU no esta dormida)
+    // Para eso utiliza un timer, que aqui hemos puesto que sea el TIMER5 (ultimo parametro que se pasa a la funcion)
+    // (y por tanto este no se deberia utilizar para otra cosa).
+    CPUUsageInit(g_ulSystemClock, configTICK_RATE_HZ/10, 5);
+
+    // COMENTARIOS: Llamamos a la funcion de inicializacion de los Servos
+    servos_init();
+    // Llamamos a la funcion de inicializacion de los Sensores
+    config_sensors();
+    // Funcion para activar ADC_0
+    configADC0_IniciaADC0();
+
+    // TAREA PWM SERVOS
+    if ((xTaskCreate(TareaMovimiento, "TaskMov", MASTERTASKSIZE, NULL, tskIDLE_PRIORITY + MASTERTASKPRIO, NULL) != pdTRUE))
+    {
+        while (1);
+    }
+
+    // TAREA CONTROLES DE LOS PINES PA
+    if ((xTaskCreate(TareaPA, "TaskPA", WHISKERTASKSIZE, NULL, tskIDLE_PRIORITY + WHISKERTASKPRIO, NULL) != pdTRUE))
+    {
+        while (1);
+    }
+
+    // TAREA CNY
+    if ((xTaskCreate(TareaCNY, "TaskCNY", WHISKERTASKSIZE, NULL, tskIDLE_PRIORITY + WHISKERTASKPRIO, NULL) != pdTRUE))
+    {
+        while (1);
+    }
+
+    // TAREA DEL SHARP
+    if ((xTaskCreate(TareaADC0Sharp, "TaskADC0", 128, NULL, tskIDLE_PRIORITY + WHISKERTASKPRIO, NULL) != pdTRUE))
+    {
+        while (1);
+    }
+
+    if (initCommandLine(512, tskIDLE_PRIORITY + 1) != pdTRUE)
+    {
+        while (1);
+    }
+
+    if (remotelink_init(REMOTELINK_TASK_STACK, tskIDLE_PRIORITY + REMOTELINK_TASK_PRIORITY, messageReceived) != pdTRUE)
+    {
+        while (1);
+    }
+
+    vTaskStartScheduler();
+
+    while (1);
+}
+
+
+//  COMENTARIOS: Funcion para el tratamiento de los switches
+void GPIOFIntHandler(void)
+{
+    uint32_t valor;
+
+    //  COMENTARIOS: Hay que inicializarlo a False!!
+    BaseType_t higherPriorityTaskWoken = pdFALSE;
+
+    int32_t i32PinStatus = MAP_GPIOIntStatus(GPIO_PORTF_BASE, ALL_BUTTONS);
+
+    if ((i32PinStatus & LEFT_BUTTON))
+    {
+        valor = VAL_BUTTON_LEFT;
+    }
+    else if ((i32PinStatus & RIGHT_BUTTON))
+    {
+        valor = VAL_BUTTON_RIGHT;
+    }
+    
+    xEventGroupSetBitsFromISR(FlagsEventos, BOTONES, &higherPriorityTaskWoken);
+
+    xQueueSendFromISR(colaBotones, &valor, &higherPriorityTaskWoken);
+
+    MAP_GPIOIntClear(GPIO_PORTF_BASE, ALL_BUTTONS);
+    portEND_SWITCHING_ISR(higherPriorityTaskWoken);
+}
+
+// Manejador del pin PA para las interrupciones del whisker y Sharp
+void GPIOInt_A_Handler(void)
+{
+    uint32_t valor = 0;
+
+    BaseType_t higherPriorityTaskWoken = pdFALSE;
+
+    int32_t i32PinStatus = GPIOIntStatus(GPIO_PORTA_BASE, true);
+
+    if (i32PinStatus & PIN_WHISK_FRONT)
+    {
+        control_whisker = 1;
+        valor = VAL_WHISK_FRONT;
+        xQueueSendFromISR(colaPA, &valor, &higherPriorityTaskWoken);
+    }
+
+    if (i32PinStatus & PIN_WHISK_BACK)
+    {
+        control_whisker = 1;
+        valor = VAL_WHISK_BACK;
+        xQueueSendFromISR(colaPA, &valor, &higherPriorityTaskWoken);
+    }
+
+    if (i32PinStatus & PIN_CNY_IZQ)
+    {
+        valor = VAL_CNY_IZQ;
+        xQueueSendFromISR(colaCNY, &valor, &higherPriorityTaskWoken);
+    }
+
+    if (i32PinStatus & PIN_CNY_DER)
+    {
+        valor = VAL_CNY_DER;
+        xQueueSendFromISR(colaCNY, &valor, &higherPriorityTaskWoken);
+    }
+
+    MAP_GPIOIntClear(GPIO_PORTA_BASE, PIN_WHISK_FRONT|PIN_WHISK_BACK|PIN_CNY_IZQ|PIN_CNY_DER);
+    portEND_SWITCHING_ISR(higherPriorityTaskWoken);
+}

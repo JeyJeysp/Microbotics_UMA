@@ -6,14 +6,14 @@
 #include <stdint.h>
 
 //  Ciclos para amplitud de pulso de parada a 1.54ms (para que este parado el motor derecho)
-#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.001503)
+#define STOPCOUNT_DER ((SysCtlClockGet() / 16) * 0.001504)
 //  Ciclos para amplitud de pulso de parada a 1.55ms (para que este parado el motor izquierdo)
 #define STOPCOUNT_IZQ ((SysCtlClockGet() / 16) * 0.00154)
 
 /*
     Ciclos de reloj para conseguir una senal periodica de 50Hz (segun reloj de periferico usado)
 
-    DBC:
+    Comentarios:
 
     tiempo transcurrido = Numero de ciclos contados * Periodo = Numero de ciclos contados * (1 / frecuencia)
     t = N * T = N * (1 / f)
@@ -38,27 +38,29 @@
 
 //  Tamano de paso desde el punto medio hasta los limites superiores e inferiores de cada motor
 //  Para el derecho ambos incrementos son iguales, para el izquierdo no.
-#define RECORRIDO_DER 300 // 300 STOPCOUNT_DER - COUNT_1MS
-#define RECORRIDO_IZQ_1 200 //200 COUNT_2MS - STOPCOUNT_IZQ
-#define RECORRIDO_IZQ_2 400 // 400 STOPCOUNT_IZQ - COUNT_1MS
+#define RECORRIDO_DER 300 // 300 = STOPCOUNT_DER - COUNT_1MS
+#define RECORRIDO_IZQ_1 200 //200 = COUNT_2MS - STOPCOUNT_IZQ
+#define RECORRIDO_IZQ_2 400 // 400 = STOPCOUNT_IZQ - COUNT_1MS
+
+#define AMBAS_RUEDAS 0
+#define RUEDA_IZQUIERDA 1
+#define RUEDA_DERECHA 2
+
+#define RUEDA_DERECHA_DEL 1
+#define RUEDA_DERECHA_TRAS 3
+#define RUEDA_IZQUIERDA_DEL 2
+#define RUEDA_IZQUIERDA_TRAS 4
 
 
-/*
- * JJNG:
- *      DEFINICION VARIABLES GLOBALES
- */
+// DEFINICION VARIABLES GLOBALES
 uint32_t estado, DCanterior[2];
 
 
-/*
-    DBC:
-
-    Definicion de funciones
-*/
+// Definicion de funciones
 void servos_init(void);
 void mov_rectilineo_servos(uint32_t ui32Status);
 void mov_curvo_servos(uint32_t ui32Status);
 void mov_rotatorio_servos(uint32_t ui32Status);
 void parar_pausar_motor(uint32_t ui32Status);
 void mov_una_rueda(uint32_t ui32Status);
-void mov_rueda_Qt(uint8_t motor, int8_t porcentaje);
+void mov_rueda_universal(uint8_t motor, int8_t porcentaje);
