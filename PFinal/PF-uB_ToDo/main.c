@@ -330,7 +330,7 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_Y, PIN_LED_Y);
                 }
 
-                xQueueReset(colaMovimiento);
+                // xQueueReset(colaMovimiento); TODO: lugar de inicio
 
                 if (((eventos & TATAMI_TD) != 0) || ((eventos & TATAMI_TI) != 0))
                 {
@@ -338,11 +338,11 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                     mov.t = 'c';
                     mov.v = 9;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
                     mov.v = -180;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     xEventGroupSetBits(FlagsEventos, MOV);
 
@@ -354,11 +354,11 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                     mov.t = 'c';
                     mov.v = -9;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
                     mov.v = 180;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     xEventGroupSetBits(FlagsEventos, MOV);
 
@@ -370,19 +370,19 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                     mov.t = 'c';
                     mov.v = 9;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
                     mov.v = 45;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'c';
                     mov.v = '3';
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
                     mov.v = 45;
-                    xQueueSend(colaMovimiento, &mov, portMAX_DELAY);
+                    xQueueSend(colaMovimiento, &mov, 0);
 
                     xEventGroupSetBits(FlagsEventos, MOV);
 
@@ -390,6 +390,7 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
                 }
                 else if (objetivo_cm == 0 && objetivo_grados == 0)
                 {
+                    xQueueReset(colaMovimiento);
                     modo = BUSQUEDA;
                 }
             }
@@ -766,24 +767,28 @@ void GPIOInt_C_Handler(void)
         if ((i32PinStatus & PIN_LIN_DD))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, TATAMI_DD, &higherPriorityTaskWoken);
+            xQueueReset(colaMovimiento);
             modo = HUIDA;
         }
 
         if ((i32PinStatus & PIN_LIN_DI))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, TATAMI_DI, &higherPriorityTaskWoken);
+            xQueueReset(colaMovimiento);
             modo = HUIDA;
         }
 
         if ((i32PinStatus & PIN_LIN_TD))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, TATAMI_TD, &higherPriorityTaskWoken);
+            xQueueReset(colaMovimiento);
             modo = HUIDA;
         }
 
         if ((i32PinStatus & PIN_LIN_TI))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, TATAMI_TI, &higherPriorityTaskWoken);
+            xQueueReset(colaMovimiento);
             modo = HUIDA;
         }
     }
