@@ -53,12 +53,12 @@
 
 // *** Declaracion de globales *** //
 bool ON_INI = false;
-int8_t modo = -1, en_movimiento = 0, show_once[] = {0, 0, 0};
+int8_t modo = -1, en_movimiento = 0, detectar = 1, show_once[] = {0, 0, 0};
 uint8_t avanzar = 0, CASIO_on = 0, pasar_SD = 1, pasar_ST = 1;
 uint32_t g_ui32CPUUsage, g_ulSystemClock, contSharp = 0, umbralSharp = 500;
 QueueHandle_t colaMovimiento, colaSharp;
 EventGroupHandle_t FlagsEventos;
-static TimerHandle_t CASIO_BUSQUEDA;
+static TimerHandle_t CASIO_BUSQUEDA, CASIO_REBOTON;
 
 int objetivo_cm = 0, objetivo_grados = 0;
 
@@ -130,6 +130,22 @@ void CASIOCallback(TimerHandle_t pxTimer)
     avanzar = 1;
 }
 
+
+//*****************************************************************************
+//
+//! CASIOCallback_2
+//!
+//! Esta callback se encargara del control de nuestro timer. Al saltar activara
+//! una variable que hara moverse en linea recta a nuestro microbot.
+//!
+//! Tipo: callback
+//
+//*****************************************************************************
+void CASIOCallback_2(TimerHandle_t pxTimer)
+{
+    detectar = 1;
+}
+
 //*****************************************************************************
 //
 //! TareaMaestra
@@ -161,9 +177,10 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                 if (show_once[0] == 0)
                 {
-                    show_once[1] = show_once[2] = 0;
+                    show_once[1] = 0;
+                    show_once[2] = 0;
                     show_once[0] = 1;
-                    UARTprintf("Entro en modo Busqueda \r\n");
+                    //UARTprintf("Entro en modo Busqueda \r\n");
 
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_G | PIN_LED_B | PIN_LED_Y, 0);
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_G, PIN_LED_G);
@@ -280,9 +297,10 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                 if (show_once[1] == 0)
                 {
-                    show_once[0] = show_once[2] = 0;
+                    show_once[0] = 0;
+                    show_once[2] = 0;
                     show_once[1] = 1;
-                    UARTprintf("Entro en modo Ataque \r\n");
+                    //UARTprintf("Entro en modo Ataque \r\n");
 
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_G|PIN_LED_B|PIN_LED_Y, 0);
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_B, PIN_LED_B);
@@ -322,9 +340,10 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                 if (show_once[2] == 0)
                 {
-                    show_once[0] = show_once[1] = 0;
+                    show_once[0] = 0;
+                    show_once[1] = 0;
                     show_once[2] = 1;
-                    UARTprintf("Entro en modo Huida \r\n");
+                    //UARTprintf("Entro en modo Huida \r\n");
 
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_G | PIN_LED_B | PIN_LED_Y, 0);
                     GPIOPinWrite(GPIO_PORTB_BASE, PIN_LED_Y, PIN_LED_Y);
@@ -334,7 +353,7 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
 
                 if (((eventos & TATAMI_TD) != 0) || ((eventos & TATAMI_TI) != 0))
                 {
-                    UARTprintf("Sensor de linea Trasero \r\n");
+                    //UARTprintf("Sensor de linea Trasero \r\n");
 
                     mov.t = 'c';
                     mov.v = 9;
@@ -350,45 +369,70 @@ static portTASK_FUNCTION (TareaMaestra, pvParameters)
                 }
                 else if (((eventos & TATAMI_DD) != 0) || ((eventos & TATAMI_DI) != 0))
                 {
-                    UARTprintf("Sensor de linea Delantero\r\n");
+                    //UARTprintf("Sensor de linea Delantero\r\n");
 
-                    mov.t = 'c';
-                    mov.v = -9;
-                    xQueueSend(colaMovimiento, &mov, 0);
+                    if ((eventos & VAL_WHISK_BACK)  != 0)
+                    {
+                        mov.t = 'g';
+                        mov.v = 90;
+                        xQueueSend(colaMovimiento, &mov, 0);
 
-                    mov.t = 'g';
-                    mov.v = 180;
-                    xQueueSend(colaMovimiento, &mov, 0);
+                        mov.t = 'c';
+                        mov.v = 9;
+                        xQueueSend(colaMovimiento, &mov, 0);
 
-                    xEventGroupSetBits(FlagsEventos, MOV);
+                        mov.t = 'g';
+                        mov.v = 90;
+                        xQueueSend(colaMovimiento, &mov, 0);
 
-                    en_movimiento = 1;
+                        mov.t = 'c';
+                        mov.v = 3;
+                        xQueueSend(colaMovimiento, &mov, 0);
+
+                        xEventGroupSetBits(FlagsEventos, MOV);
+
+                        en_movimiento = 1;
+                    }
+                    else
+                    {
+                        mov.t = 'c';
+                        mov.v = -9;
+                        xQueueSend(colaMovimiento, &mov, 0);
+
+                        mov.t = 'g';
+                        mov.v = 180;
+                        xQueueSend(colaMovimiento, &mov, 0);
+
+                        xEventGroupSetBits(FlagsEventos, MOV);
+
+                        en_movimiento = 1;
+                    }
                 }
                 else if ((eventos & VAL_WHISK_BACK)  != 0)
                 {
-                    UARTprintf("Whisker trasero \r\n");
+                    //UARTprintf("Whisker trasero \r\n");
 
                     mov.t = 'c';
                     mov.v = 9;
                     xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
-                    mov.v = 45;
+                    mov.v = 90;
                     xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'c';
-                    mov.v = '3';
+                    mov.v = 3;
                     xQueueSend(colaMovimiento, &mov, 0);
 
                     mov.t = 'g';
-                    mov.v = 45;
+                    mov.v = 90;
                     xQueueSend(colaMovimiento, &mov, 0);
 
                     xEventGroupSetBits(FlagsEventos, MOV);
 
                     en_movimiento = 1;
                 }
-                else if (objetivo_cm == 0 && objetivo_grados == 0)
+                else if (en_movimiento == 0)
                 {
                     xQueueReset(colaMovimiento);
                     modo = BUSQUEDA;
@@ -685,9 +729,16 @@ int main(void)
     }
 
 
-    //Creacion Timer
+    //Creacion Timer CASIO
     CASIO_BUSQUEDA = xTimerCreate("TIMER_BUSQUEDA", 4000/portTICK_PERIOD_MS, pdTRUE, NULL, CASIOCallback);
     if(CASIO_BUSQUEDA == NULL)
+    {
+        while(1);
+    }
+
+    //Creacion Timer Whisker
+    CASIO_REBOTON = xTimerCreate("TIMER_WHISKER", 200/portTICK_PERIOD_MS, pdFALSE, NULL, CASIOCallback_2);
+    if(CASIO_REBOTON == NULL)
     {
         while(1);
     }
@@ -729,16 +780,29 @@ void GPIOInt_A_Handler(void)
 
     if (ON_INI)
     {
-        if (i32PinStatus & PIN_WHISK_FRONT)
+        if ((i32PinStatus & PIN_WHISK_FRONT) && (detectar == 1))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, VAL_WHISK_FRONT, &higherPriorityTaskWoken);
             modo = ATAQUE;
+            detectar = 0;
+
+            if(xTimerStart(CASIO_REBOTON, 0) != pdPASS)
+            {
+                while(1);
+            }
         }
 
-        if (i32PinStatus & PIN_WHISK_BACK)
+        if ((i32PinStatus & PIN_WHISK_BACK) && (detectar == 1))
         {
             xEventGroupSetBitsFromISR(FlagsEventos, VAL_WHISK_BACK, &higherPriorityTaskWoken);
+            xQueueReset(colaMovimiento);
             modo = HUIDA;
+            detectar = 0;
+
+            if(xTimerStart(CASIO_REBOTON, 0) != pdPASS)
+            {
+                while(1);
+            }
         }
 
         if (i32PinStatus & PIN_CNY_IZQ)
