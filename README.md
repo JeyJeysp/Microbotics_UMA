@@ -8,7 +8,6 @@ Repository for tracking and version control of the projects to be done for the M
 ## 🗺 Diagrams
 
 <p align="center">
-  <img src="https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Diagramas/Diagrama%201.jpg" width="500" />
   <img src="https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Diagramas/Diagrama%202.PNG" width="500" /> 
 </p>
 
