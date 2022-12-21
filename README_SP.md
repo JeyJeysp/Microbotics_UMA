@@ -8,7 +8,6 @@ Repositorio para el seguimiento y control de versiones de los proyectos a realiz
 ## 🗺 Diagramas
 
 <p align="center">
-  <img src="https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Diagramas/Diagrama%201.jpg" width="500" />
   <img src="https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Diagramas/Diagrama%202.PNG" width="500" /> 
 </p>
 
