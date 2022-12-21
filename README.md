@@ -18,6 +18,7 @@ Practice| Content
 ---|--- 
 Practice 1 | <ul><li>All proposed exercises completed</ul> 
 Practice 2 | <ul><li>All proposed exercises completed except the optional</ul> 
+Final Practice | <ul><li>Hybrid system implemented</ul> 
 
 ## 👤 Contributors
 Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Electronic Systems Engineering at the University of Málaga.
