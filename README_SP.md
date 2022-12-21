@@ -18,6 +18,7 @@ Práctica|Contenido
 ---|---
 Práctica 1 | <ul><li>Todos los ejercicios propuestos completados</ul>
 Práctica 2 | <ul><li>Todos los ejercicios propuestos completados menos el opcional</ul>
+Práctica Final | <ul><li>Sistema hibrido implementado</ul> 
 
 ## 👤 Contribuyentes 
 Realizado por Juan José Navarrete Galvez y Daniel Bazo Correa, estudiantes de Grado en Ingeniería de Sistemas Electrónicos de la Universidad de Málaga.
