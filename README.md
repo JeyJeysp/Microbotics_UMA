@@ -11,7 +11,7 @@ Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Degree i
 
 ## 🦾 Steps
 
-The steps performed for the elaboration of the project can be found in this. 
+The steps performed for the elaboration of the project can be found in this 
 [link](https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Documentos/Memoria_Prctica_Final.pdf).
 
 ## 🗺 Diagrams
