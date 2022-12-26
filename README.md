@@ -1,26 +1,24 @@
 [README English](https://github.com/JeyJeysp/Microbotics_UMA/blob/main/README.md) / [README Spanish](https://github.com/JeyJeysp/Microbotics_UMA/blob/main/README_SP.md)
 # 🤖 Microbotics UMA
 
-## 📄 Abstract
-All the specifications pertaining to the practices for the Microbotics course.
-Repository for tracking and version control of the projects to be done for the Microbotics course.
+## 📄 Summary
+
+This repository gathers all the documents and codes needed for the realization, monitoring and version control of the different practices for the Microbotics subject belonging to the University of Malaga (UMA). 
+
+## 👤 Contributors
+
+Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Degree in Electronic Systems Engineering at the University of Malaga.
+
+## 🦾 Steps
+
+The steps performed for the elaboration of the project can be found in this. 
+[link](https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Documentos/Memoria_Prctica_Final.pdf).
 
 ## 🗺 Diagrams
 
 <p align="center">
   <img src="https://github.com/JeyJeysp/Microbotics_UMA/blob/main/Diagramas/Diagrama%202.PNG" width="500" /> 
 </p>
-
-## 📋 To Do List
-
-Practice| Content 
----|--- 
-Practice 1 | <ul><li>All proposed exercises completed</ul> 
-Practice 2 | <ul><li>All proposed exercises completed except the optional</ul> 
-Final Practice | <ul><li>Hybrid system implemented</ul> 
-
-## 👤 Contributors
-Made by Juan José Navarrete Galvez and Daniel Bazo Correa, students of Electronic Systems Engineering at the University of Málaga.
 
 ## ⭐ License
 
